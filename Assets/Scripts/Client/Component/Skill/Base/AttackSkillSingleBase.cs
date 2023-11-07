@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AttackSkillSingleBaseData : AttackSkillBaseData
 {
     public float flySpeed = 1.0f;
-    public Vector2 startPos = Vector2.zero;
 }
 
 public class AttackSkillSingleBase : AttackSkillBase
@@ -29,18 +29,21 @@ public class AttackSkillSingleBase : AttackSkillBase
         EntityBase entity = GetHitEntityOne();
         if (entity == null) { return; }
 
-        Vector2 dir = (entity.GetPosition() - GetPosition()).normalized;
+        Vector2 dir = (entity.GetPosition() - attackSkillSingleBaseData.startPos).normalized;
         EntityBase bulletEntity = EntityManager.Instance.CreateEntity<EntityBase>(EntityType.SKill ,GetSkillId());
         DirMoveComponent dirMoveComponent = bulletEntity.GetComponent<DirMoveComponent>();
         // 移动
-        dirMoveComponent.SetPosition(GetPosition());
-        dirMoveComponent.Move(dir, attackSkillSingleBaseData.flySpeed, () =>
-        {
-            // 移动到了目的地
-            // EntityManager.Instance.RemoveEntity(GetEntityId(), GetEntityInstanceId());
-        },() =>
+        dirMoveComponent.SetPosition(attackSkillSingleBaseData.startPos);
+        dirMoveComponent.Move(dir, attackSkillSingleBaseData.flySpeed, null,() =>
         {
             EntityManager.Instance.RemoveEntity(bulletEntity.GetEntityInstanceId());
+        }, (EntityBase moveHitEntity) =>
+        {
+            if (attackSkillSingleBaseData.hitCall != null) 
+            {
+                EntityManager.Instance.RemoveEntity(bulletEntity.GetEntityInstanceId());
+                attackSkillSingleBaseData.hitCall(bulletEntity, moveHitEntity);
+            }
         });
     }
 }

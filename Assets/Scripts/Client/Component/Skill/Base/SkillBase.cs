@@ -36,6 +36,7 @@ public class SkillBase : EntityBase
         skillLevel = skillBaseData.skillLevel;
         attackDistance = skillBaseData.attackDistance;
         attackInterval = skillBaseData.attackInterval;
+        _attackIntervalCount = attackInterval;
     }
 
     public void Update()

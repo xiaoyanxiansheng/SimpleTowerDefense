@@ -2,17 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(NearRangeAttckSkill))]
 public class NearRangeAttckTower : TowerBase
 {
-    // Start is called before the first frame update
-    void Start()
+    private NearRangeAttckSkill attackSkill;
+
+    private void Awake()
     {
-        
+        attackSkill = GetComponent<NearRangeAttckSkill>();
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnRealEnable()
     {
-        
+        NearRangeAttckSkillData data = new NearRangeAttckSkillData();
+        data.attackEntity = this;
+        data.skillId = 30004;
+        data.skillLevel = 1;
+        data.attackDistance = 150;
+        data.attackInterval = 0.2f;
+        data.startPos = GetPosition();
+        data.rangeDistance = 300f;
+        attackSkill.Play(data);
     }
 }

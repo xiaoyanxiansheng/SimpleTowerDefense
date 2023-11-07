@@ -6,6 +6,8 @@ using UnityEngine;
 /// 单体攻击技能
 /// </summary>
 
+public class SingleAttckSkillData : AttackSkillSingleBaseData { }
+
 public class SingleAttckSkill : AttackSkillSingleBase
 {
 

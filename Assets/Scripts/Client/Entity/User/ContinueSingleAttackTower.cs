@@ -12,7 +12,7 @@ public class ContinueSingleAttackTower : TowerBase
         _continueAttackSkill = GetComponent<ContinueAttackSkill>();
     }
 
-    private void OnEnable()
+    protected override void OnRealEnable()
     {
         AttackSkillContinueBaseData data = new AttackSkillContinueBaseData();
         data.attackEntity = this;

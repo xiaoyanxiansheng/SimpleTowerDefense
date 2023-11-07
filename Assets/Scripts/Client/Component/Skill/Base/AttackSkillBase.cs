@@ -1,19 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AttackSkillBaseData : SkillBaseData
 {
-
+    public Vector2 startPos;
+    public Action<EntityBase,EntityBase> hitCall;
 }
 
 public class AttackSkillBase : SkillBase
 {
     // 技能命中敌人后所附加的效果集合
     //private List<Dictionary<string,int>> _effects = new List<Dictionary<string, int>>();
+    private AttackSkillBaseData _attackSkillBaseData;
 
     public void Play(AttackSkillBaseData attackSkillBaseData)
     {
+        _attackSkillBaseData = attackSkillBaseData;
         base.Play(attackSkillBaseData);
     }
 
@@ -42,7 +46,7 @@ public class AttackSkillBase : SkillBase
         
         if(hitEntity != null)
         {
-            if (Vector2.Distance(hitEntity.GetPosition(), GetPosition()) > GetAttackDistance())
+            if (Vector2.Distance(hitEntity.GetPosition(), _attackSkillBaseData.startPos) > GetAttackDistance())
             {
                 hitEntity = null;
             }
@@ -50,8 +54,8 @@ public class AttackSkillBase : SkillBase
 
         if (hitEntity == null)
         {
-            hitEntity = EntityManager.Instance.GetEntityByDistance(GetAttackEntity().GetEntityType(), GetPosition(), attackDistance);
-            if (hitEntity != null) 
+            hitEntity = EntityManager.Instance.GetEntityByDistance(EntityType.Enemy, _attackSkillBaseData.startPos, attackDistance);
+            if(hitEntity != null)
             {
                 hitEntitys.Clear();
                 hitEntitys.Add(hitEntity);
@@ -66,5 +70,16 @@ public class AttackSkillBase : SkillBase
         ClearNullReference();
         if (hitEntitys.Count == 0) return null;
         return hitEntitys[0];
+    }
+
+    protected bool CheckAttckList()
+    {
+        hitEntitys = EntityManager.Instance.GetEntityByDistances(EntityType.Enemy, _attackSkillBaseData.startPos, attackDistance);
+        return hitEntitys.Count > 0;
+    }
+
+    protected List<EntityBase> GetHitEntityList()
+    {
+        return hitEntitys;
     }
 }

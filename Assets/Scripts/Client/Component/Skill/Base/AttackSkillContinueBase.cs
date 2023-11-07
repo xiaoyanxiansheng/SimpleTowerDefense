@@ -10,18 +10,17 @@ using UnityEngine;
 /// </summary>
 public class AttackSkillContinueBaseData : AttackSkillBaseData
 {
-    public Vector2 startPos = Vector2.zero;
-    public Action hitCall;
+    
 }
 
 public class AttackSkillContinueBase : AttackSkillBase
 {
-    private AttackSkillContinueBaseData attackSkillContinueBaseData = null;
+    private AttackSkillContinueBaseData _attackSkillContinueBaseData = null;
     protected EntityBase _bulletEntity = null;
 
     public void Play(AttackSkillContinueBaseData attackSkillContinueBaseData)
     {
-        this.attackSkillContinueBaseData = attackSkillContinueBaseData;
+        _attackSkillContinueBaseData = attackSkillContinueBaseData;
         base.Play(attackSkillContinueBaseData);
 
         // 创建显示实体
@@ -38,7 +37,7 @@ public class AttackSkillContinueBase : AttackSkillBase
 
     protected override void OnAttack()
     {
-        Debug.Log("攻击");
+        //Debug.Log("攻击");
     }
 
     protected override void OnUpdate()
@@ -46,12 +45,12 @@ public class AttackSkillContinueBase : AttackSkillBase
         EntityBase entity = GetHitEntityOne();
         if(entity == null) { return; }
 
-        Vector2 dir = (entity.GetPosition() - GetPosition()).normalized;
-        float length = Vector2.Distance(entity.GetPosition(), GetPosition());
+        Vector2 dir = (entity.GetPosition() - _attackSkillContinueBaseData.startPos).normalized;
+        float length = Vector2.Distance(entity.GetPosition(), _attackSkillContinueBaseData.startPos);
 
         PointMoveComponent pointMoveComponent = _bulletEntity.GetComponent<PointMoveComponent>();
         // 移动
-        pointMoveComponent.Move(GetAttackEntity().GetPosition(),entity.GetPosition(), () =>
+        pointMoveComponent.Move(_attackSkillContinueBaseData.startPos, entity.GetPosition(), () =>
         {
             // 移动到了目的地
             // EntityManager.Instance.RemoveEntity(GetEntityId(), GetEntityInstanceId());

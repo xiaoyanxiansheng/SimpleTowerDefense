@@ -31,3 +31,9 @@ MonoBehaviour:
     prefab: {fileID: 7525510868778550327, guid: 64aca5ad9f3187f4f903e5795ef0c62c, type: 3}
   - EntityId: 30003
     prefab: {fileID: 6277192594744025459, guid: 831d25979684f9d47b3e7144603eb186, type: 3}
+  - EntityId: 30004
+    prefab: {fileID: 6277192594744025459, guid: 08f00410664efc84099933508f1f7cc4, type: 3}
+  - EntityId: 10004
+    prefab: {fileID: 7525510868778550327, guid: 42e4e765a327b90428a7d6e60afe265c, type: 3}
+  - EntityId: 10005
+    prefab: {fileID: 7525510868778550327, guid: 72ec405b6e9c95443947fdceee6dd873, type: 3}

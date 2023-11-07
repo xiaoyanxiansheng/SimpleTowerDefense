@@ -50,7 +50,6 @@ public class PointMoveComponent : MoveComponentBase
         transform.localScale = localScale;
         SetPosition(_startPos + _dir * _length * 0.5f);
 
-        Debug.Log(angle);
         // Debug.Log("Ò»Ö±´¥·¢");
         if (_moveDestinationCall != null)
             _moveDestinationCall();

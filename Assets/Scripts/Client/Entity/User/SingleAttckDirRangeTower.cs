@@ -13,14 +13,15 @@ public class SingleAttckDirRangeTower : TowerBase
         _dirRangeAttackSkill = GetComponent<DirRangeAttackSkill>();
     }
 
-    private void OnEnable()
+    protected override void OnRealEnable()
     {
-        AttackSkillRangeBaseData data = new AttackSkillRangeBaseData();
+        DirRangeAttackSkillData data = new DirRangeAttackSkillData();
         data.attackEntity = this;
         data.skillId = 30003;
         data.skillLevel = 1;
         data.attackDistance = 400;
-        data.attackInterval = 0.1f;
+        data.attackInterval = 1f;
+        data.startPos = GetPosition();
         _dirRangeAttackSkill.Play(data);
     }
 }

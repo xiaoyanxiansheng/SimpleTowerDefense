@@ -18,7 +18,7 @@ public class EntityManager : MonoBehaviour
     {
         // 创建自己
         EntityBase entity = CreateEntity<SingleAttckTower>(EntityType.User, 10001);
-        entity.SetPositionCell(new int2(8, 5));
+        entity.SetPositionCell(new int2(6, 4));
         entity = CreateEntity<SingleAttckTower>(EntityType.User, 10001);
         entity.SetPositionCell(new int2(6, 10));
         entity = CreateEntity<ContinueSingleAttackTower>(EntityType.User, 10002);
@@ -37,8 +37,12 @@ public class EntityManager : MonoBehaviour
         entity.SetPositionCell(new int2(5, 9));
         entity = CreateEntity<SingleAttckDirRangeTower>(EntityType.User, 10003);
         entity.SetPositionCell(new int2(2, 3));
-        entity = CreateEntity<SingleAttckDirRangeTower>(EntityType.User, 10003);
+        entity = CreateEntity<NearRangeAttckTower>(EntityType.User, 10004);
         entity.SetPositionCell(new int2(8, 10));
+        entity = CreateEntity<LongRangeAttackTower>(EntityType.User, 10005);
+        entity.SetPositionCell(new int2(6, 11));
+        entity = CreateEntity<LongRangeAttackTower>(EntityType.User, 10005);
+        entity.SetPositionCell(new int2(3, 7));
     }
 
     private int indexCount = 0;
@@ -112,7 +116,7 @@ public class EntityManager : MonoBehaviour
         float minDistance = 100000f;
         foreach(EntityBase entity in _entitys)
         {
-            if(entity.GetEntityType() != EntityType.SKill && entityType != entity.GetEntityType())
+            if(entity.GetEntityType() != EntityType.SKill && entityType == entity.GetEntityType())
             {
                 float tempDistance = Vector2.Distance(entity.transform.localPosition, pos);
                 if (Vector2.Distance(entity.transform.localPosition, pos) < distance)
@@ -126,5 +130,21 @@ public class EntityManager : MonoBehaviour
             }
         }
         return entityBase;
+    }
+
+    public List<EntityBase> GetEntityByDistances(EntityType entityType, Vector2 pos, float distance)
+    {
+        List<EntityBase> entityBases = new List<EntityBase>();
+        foreach (EntityBase entity in _entitys)
+        {
+            if (entity.GetEntityType() != EntityType.SKill && entityType == entity.GetEntityType())
+            {
+                if (Vector2.Distance(entity.transform.localPosition, pos) < distance)
+                {
+                    entityBases.Add(entity);
+                }
+            }
+        }
+        return entityBases;
     }
 }
