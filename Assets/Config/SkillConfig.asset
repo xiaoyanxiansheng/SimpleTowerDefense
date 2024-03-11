@@ -1,0 +1,185 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15cd7b2ce10e572489fceb7f97c11069, type: 3}
+  m_Name: SkillConfig
+  m_EditorClassIdentifier: 
+  SkillConfigDatas:
+  - desc: "10101 \u5355\u4F53 \u5B9A\u70B9"
+    skillId: 10101
+    skillLevels:
+    - desc: 1
+      skills:
+      - desc: 1
+        skillId: 10101
+        skillLevel: 1
+        entityId: 30001
+        skillType: 1
+        skillLockType: 1
+        skillReleaseType: 3
+        skillRangeType: 1
+        attackNum: 1
+        speed: 2
+        distanceX: 300
+        distanceY: -1
+        intervalTime: 2
+        continueTime: -1
+        intervalHitTime: -1
+        effects:
+        - desc: 
+          skillEffectValueType: 1
+          skillEffectType: 1
+          addType: 2
+          value: 0.1
+          continueTime: 0
+          intervalTime: 0
+  - desc: "10102 \u5355\u4F53 \u6301\u7EED"
+    skillId: 10102
+    skillLevels:
+    - desc: 1
+      skills:
+      - desc: 
+        skillId: 10102
+        skillLevel: 1
+        entityId: 30002
+        skillType: 2
+        skillLockType: 1
+        skillReleaseType: 3
+        skillRangeType: 1
+        attackNum: 2
+        speed: 0
+        distanceX: 500
+        distanceY: 0
+        intervalTime: 0.1
+        continueTime: 0
+        intervalHitTime: 0
+        effects:
+        - desc: 
+          skillEffectValueType: 1
+          skillEffectType: 1
+          addType: 2
+          value: 0.1
+          continueTime: 0
+          intervalTime: 0
+  - desc: "10201 \u8303\u56F4 \u5B9A\u70B9"
+    skillId: 10201
+    skillLevels:
+    - desc: 1
+      skills:
+      - desc: 
+        skillId: 10201
+        skillLevel: 1
+        entityId: 30004
+        skillType: 3
+        skillLockType: 1
+        skillReleaseType: 1
+        skillRangeType: 1
+        attackNum: 0
+        speed: 0
+        distanceX: 200
+        distanceY: 0
+        intervalTime: 2
+        continueTime: 0
+        intervalHitTime: 0
+        effects:
+        - desc: 
+          skillEffectValueType: 1
+          skillEffectType: 1
+          addType: 2
+          value: 1
+          continueTime: 0
+          intervalTime: 0
+  - desc: "20001 \u3010\u7EC4\u5408\u6280\u3011\u8FDC\u7A0B \u8303\u56F4"
+    skillId: 20001
+    skillLevels:
+    - desc: 1
+      skills:
+      - desc: 10101
+        skillId: 10101
+        skillLevel: 1
+        entityId: -1
+        skillType: 0
+        skillLockType: 0
+        skillReleaseType: 0
+        skillRangeType: 0
+        attackNum: -1
+        speed: -1
+        distanceX: -1
+        distanceY: -1
+        intervalTime: 1.5
+        continueTime: -1
+        intervalHitTime: -1
+        effects:
+        - desc: 
+          skillEffectValueType: 0
+          skillEffectType: 0
+          addType: 0
+          value: 0
+          continueTime: 0
+          intervalTime: 0
+      - desc: 10201
+        skillId: 10201
+        skillLevel: 1
+        entityId: -1
+        skillType: 0
+        skillLockType: 0
+        skillReleaseType: 0
+        skillRangeType: 0
+        attackNum: -1
+        speed: -1
+        distanceX: 200
+        distanceY: -1
+        intervalTime: 0
+        continueTime: 0.2
+        intervalHitTime: 0
+        effects:
+        - desc: 
+          skillEffectValueType: 1
+          skillEffectType: 2
+          addType: 2
+          value: 1
+          continueTime: 0
+          intervalTime: 0
+        - desc: 
+          skillEffectValueType: 1
+          skillEffectType: 1
+          addType: 2
+          value: 3
+          continueTime: 0
+          intervalTime: 0
+  - desc: "40001  \u9635\u6CD5"
+    skillId: 40001
+    skillLevels:
+    - desc: 1
+      skills:
+      - desc: 1
+        skillId: 40001
+        skillLevel: 1
+        entityId: 41001
+        skillType: 3
+        skillLockType: 1
+        skillReleaseType: 1
+        skillRangeType: 1
+        attackNum: 0
+        speed: 0
+        distanceX: 400
+        distanceY: 0
+        intervalTime: 0.3
+        continueTime: 0
+        intervalHitTime: 0
+        effects:
+        - desc: 
+          skillEffectValueType: 2
+          skillEffectType: 2
+          addType: 2
+          value: 0.5
+          continueTime: 0.5
+          intervalTime: 0

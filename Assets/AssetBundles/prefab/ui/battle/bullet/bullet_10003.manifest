@@ -1,0 +1,31 @@
+ManifestFileVersion: 0
+CRC: 3419831103
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0505208346c47f9a626c5c0657ad8af1
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 325773cad31b2ea8cb9878b38d14d6a5
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: dacae7bfa199f5b41a1774eee0dc1b81, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
+Assets:
+- Assets/BuildResource/Prefab/UI/Battle/Bullet/Bullet_10003.prefab
+Dependencies: []

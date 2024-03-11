@@ -1,0 +1,9 @@
+diff a/Assets/Scripts/Client/Component/Skill/Base/AttackSkillContinueBase.cs b/Assets/Scripts/Client/Component/Skill/Base/AttackSkillContinueBase.cs	(rejected hunks)
+@@ -51,6 +51,7 @@
+ 
+         PointMoveComponent pointMoveComponent = _bulletEntity.GetComponent<PointMoveComponent>();
+         // �ƶ�
++        pointMoveComponent.Move(GetPosition(),entity.GetPosition(), () =>
+         {
+             // �ƶ�����Ŀ�ĵ�
+             // EntityManager.Instance.RemoveEntity(GetEntityId(), GetEntityInstanceId());

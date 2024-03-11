@@ -1,0 +1,83 @@
+ManifestFileVersion: 0
+CRC: 2159009204
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: prefab/ui/main/uimain2
+      Dependencies: {}
+    Info_1:
+      Name: prefab/ui/main/uimain
+      Dependencies: {}
+    Info_2:
+      Name: prefab/ui/battle/uibattlemain
+      Dependencies: {}
+    Info_3:
+      Name: prefab/ui/main/uimain3
+      Dependencies: {}
+    Info_4:
+      Name: prefab/ui/battle/bullet/bullet_10001
+      Dependencies: {}
+    Info_5:
+      Name: prefab/ui/battle/bullet/bullet_10002
+      Dependencies: {}
+    Info_6:
+      Name: prefab/ui/battle/bullet/bullet_10003
+      Dependencies: {}
+    Info_7:
+      Name: prefab/ui/battle/bullet/bullet_10004
+      Dependencies: {}
+    Info_8:
+      Name: prefab/ui/battle/entity/enemy01
+      Dependencies:
+        Dependency_0: texture/enemy01
+    Info_9:
+      Name: texture/enemy01
+      Dependencies: {}
+    Info_10:
+      Name: texture/enemy02
+      Dependencies: {}
+    Info_11:
+      Name: texture/enemy03
+      Dependencies: {}
+    Info_12:
+      Name: texture/player50001
+      Dependencies: {}
+    Info_13:
+      Name: prefab/ui/battle/entity/enemy02
+      Dependencies:
+        Dependency_0: texture/enemy02
+    Info_14:
+      Name: prefab/ui/battle/entity/enemy03
+      Dependencies:
+        Dependency_0: texture/enemy03
+    Info_15:
+      Name: prefab/ui/battle/entity/player50001
+      Dependencies:
+        Dependency_0: texture/player50001
+    Info_16:
+      Name: prefab/ui/battle/entity/tower01
+      Dependencies: {}
+    Info_17:
+      Name: prefab/ui/battle/entity/tower02
+      Dependencies: {}
+    Info_18:
+      Name: prefab/ui/battle/entity/tower03
+      Dependencies: {}
+    Info_19:
+      Name: prefab/ui/battle/entity/tower04
+      Dependencies: {}
+    Info_20:
+      Name: prefab/ui/battle/entity/tower05
+      Dependencies: {}
+    Info_21:
+      Name: prefab/ui/battle/matrix/matrix_40001
+      Dependencies: {}
+    Info_22:
+      Name: prefab/ui/battle/matrix/matrix_41001
+      Dependencies: {}
+    Info_23:
+      Name: texture/thumbnail
+      Dependencies: {}
+    Info_24:
+      Name: prefab/ui/battle/waycell/waycell001
+      Dependencies: {}

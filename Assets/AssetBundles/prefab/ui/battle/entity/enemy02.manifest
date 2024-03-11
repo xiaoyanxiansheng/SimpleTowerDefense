@@ -1,0 +1,36 @@
+ManifestFileVersion: 0
+CRC: 3118698370
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 978a80624eac2a8bb85f68f78a906484
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b16b9d05f6948db795635691aac34fb1
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b1ab59e1cc0e53542aeff26db699de3a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b443e33715528d54580a00d4568522b4, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
+Assets:
+- Assets/BuildResource/Prefab/UI/Battle/Entity/Enemy02.prefab
+Dependencies:
+- D:/SimpleTowerDefense/Assets/AssetBundles/texture/enemy02

@@ -1,0 +1,14 @@
+diff a/Assets/Scripts/Client/Component/Skill/Base/AttackSkillRangeBase.cs b/Assets/Scripts/Client/Component/Skill/Base/AttackSkillRangeBase.cs	(rejected hunks)
+@@ -33,10 +33,10 @@
+ 
+         EntityBase bulletEntity = EntityManager.Instance.CreateEntity<EntityBase>(EntityType.SKill, GetSkillId());
+         entityBases.Add(bulletEntity);
+-        entityShowCDs.Add(0.3f);
++        entityShowCDs.Add(0.2f);    //TODO
+         PointMoveComponent pointMoveComponent = bulletEntity.GetComponent<PointMoveComponent>();
+         // �ƶ�
+-        pointMoveComponent.MoveDir(GetAttackEntity().GetPosition(), dir, () =>
++        pointMoveComponent.MoveDir(GetPosition(), dir, () =>
+         {
+             // �ƶ�����Ŀ�ĵ�
+             // EntityManager.Instance.RemoveEntity(GetEntityId(), GetEntityInstanceId());
