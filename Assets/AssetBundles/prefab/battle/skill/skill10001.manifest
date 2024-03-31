@@ -1,0 +1,39 @@
+ManifestFileVersion: 0
+CRC: 450228908
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: ba0407546e971894f30898cfe8af32d3
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b9850e56863f2b5a146d017faeed6c63
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 50
+  Script: {instanceID: 0}
+- Class: 60
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 6892d10077c799e419377543ae024252, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 6658fe852707e604d925fe4c22d13c34, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 120
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
+Assets:
+- Assets/BuildResource/Prefab/Battle/Skill/Skill10001.prefab
+Dependencies: []

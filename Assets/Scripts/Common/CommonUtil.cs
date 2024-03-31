@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class CommonUtil
@@ -77,6 +78,11 @@ public static class CommonUtil
         return new int2((int)(val.x / Define.CELL_SIZE), (int)(val.y/ Define.CELL_SIZE));
     }
 
+    public static Vector2 CellConvertVec(int2 cell)
+    {
+        return new Vector2(cell.x * Define.CELL_SIZE, cell.y * Define.CELL_SIZE);
+    }
+
     public static T AddMissingComponent<T>(GameObject obj) where T : Component
     {
         if(obj.GetComponent<T>() == null) 
@@ -84,5 +90,13 @@ public static class CommonUtil
             obj.AddComponent<T>();
         }
         return obj.GetComponent<T>();
+    }
+
+    public static float CalAngle(Vector2 start , Vector2 end)
+    {
+        Vector2 direction = end - start;
+        float angleRad = Mathf.Atan2(direction.y, direction.x);
+        float angleDeg = (180 / Mathf.PI) * angleRad;
+        return angleDeg;
     }
 }

@@ -1,0 +1,215 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: affc1a577f2b54d4f803b37c6bd73b6e, type: 3}
+  m_Name: LevelEnemyConfig
+  m_EditorClassIdentifier: 
+  battleEnemyConfigDatas:
+  - desc: 
+    entityId: 20001
+    enterTime: 0.5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 5
+      y: 10
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 1
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 1.5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 2
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 2.5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 3
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 1.1
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 3.5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 0
+      y: 0
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 4
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 4.5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 5.5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 6
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 6.5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 7
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 7.5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 8
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 8.5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 9
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []
+  - desc: 
+    entityId: 20001
+    enterTime: 9.5
+    startPoint:
+      x: 0
+      y: 0
+    endPoint:
+      x: 9
+      y: 14
+    buff: []

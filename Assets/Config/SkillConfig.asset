@@ -9,177 +9,376 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15cd7b2ce10e572489fceb7f97c11069, type: 3}
+  m_Script: {fileID: 11500000, guid: 27d0784aa98459c4c93cffc4a6cf8e44, type: 3}
   m_Name: SkillConfig
   m_EditorClassIdentifier: 
-  SkillConfigDatas:
-  - desc: "10101 \u5355\u4F53 \u5B9A\u70B9"
-    skillId: 10101
-    skillLevels:
-    - desc: 1
-      skills:
-      - desc: 1
-        skillId: 10101
-        skillLevel: 1
-        entityId: 30001
-        skillType: 1
-        skillLockType: 1
-        skillReleaseType: 3
-        skillRangeType: 1
-        attackNum: 1
-        speed: 2
-        distanceX: 300
-        distanceY: -1
-        intervalTime: 2
-        continueTime: -1
-        intervalHitTime: -1
-        effects:
-        - desc: 
-          skillEffectValueType: 1
-          skillEffectType: 1
-          addType: 2
-          value: 0.1
-          continueTime: 0
-          intervalTime: 0
-  - desc: "10102 \u5355\u4F53 \u6301\u7EED"
-    skillId: 10102
-    skillLevels:
-    - desc: 1
-      skills:
-      - desc: 
-        skillId: 10102
-        skillLevel: 1
-        entityId: 30002
-        skillType: 2
-        skillLockType: 1
-        skillReleaseType: 3
-        skillRangeType: 1
-        attackNum: 2
-        speed: 0
-        distanceX: 500
-        distanceY: 0
-        intervalTime: 0.1
+  configs:
+  - desc: "\u6D4B\u8BD5\u6280\u80FD10001 \u5F27\u5F62\u8FDC\u7A0B"
+    skillId: 10001
+    readyConfig:
+      continueTime: 0
+      actionName: TestName
+      fxName: TestName
+    trackConfig:
+      IsLoop: 0
+      IsBreak: 0
+      ShapeAssetPath: Prefab/Battle/Skill/Skill10001
+      isUseTranslation: 1
+      translationConfig:
+        mulSpeed: 5
+        type: 0
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 2
+            outSlope: 2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      isUseRotation: 0
+      rotationConfig:
+        mulSpeed: 360
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      isUseScale: 0
+      scaleConfig:
+        mulSpeed: 1
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      isUseHit: 1
+      hitConfig:
         continueTime: 0
-        intervalHitTime: 0
-        effects:
-        - desc: 
-          skillEffectValueType: 1
-          skillEffectType: 1
-          addType: 2
-          value: 0.1
-          continueTime: 0
-          intervalTime: 0
-  - desc: "10201 \u8303\u56F4 \u5B9A\u70B9"
-    skillId: 10201
-    skillLevels:
-    - desc: 1
-      skills:
-      - desc: 
-        skillId: 10201
-        skillLevel: 1
-        entityId: 30004
-        skillType: 3
-        skillLockType: 1
-        skillReleaseType: 1
-        skillRangeType: 1
-        attackNum: 0
-        speed: 0
-        distanceX: 200
-        distanceY: 0
-        intervalTime: 2
+        invertalTime: 0
+        effects: []
+    buffConfig:
+      buffIds: 
+  - desc: "\u6D4B\u8BD5\u6280\u80FD10002 \u5706\u5F62"
+    skillId: 10002
+    readyConfig:
+      continueTime: 0
+      actionName: TestName
+      fxName: TestName
+    trackConfig:
+      IsLoop: 0
+      IsBreak: 0
+      ShapeAssetPath: Prefab/Battle/Skill/Skill10002
+      isUseTranslation: 0
+      translationConfig:
+        mulSpeed: 1
+        type: 1
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      isUseRotation: 0
+      rotationConfig:
+        mulSpeed: 1
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      isUseScale: 0
+      scaleConfig:
+        mulSpeed: 1
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 2
+            outSlope: 2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 3
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 1
+          m_RotationOrder: 4
+      isUseHit: 0
+      hitConfig:
         continueTime: 0
-        intervalHitTime: 0
-        effects:
-        - desc: 
-          skillEffectValueType: 1
-          skillEffectType: 1
-          addType: 2
-          value: 1
-          continueTime: 0
-          intervalTime: 0
-  - desc: "20001 \u3010\u7EC4\u5408\u6280\u3011\u8FDC\u7A0B \u8303\u56F4"
-    skillId: 20001
-    skillLevels:
-    - desc: 1
-      skills:
-      - desc: 10101
-        skillId: 10101
-        skillLevel: 1
-        entityId: -1
-        skillType: 0
-        skillLockType: 0
-        skillReleaseType: 0
-        skillRangeType: 0
-        attackNum: -1
-        speed: -1
-        distanceX: -1
-        distanceY: -1
-        intervalTime: 1.5
-        continueTime: -1
-        intervalHitTime: -1
-        effects:
-        - desc: 
-          skillEffectValueType: 0
-          skillEffectType: 0
-          addType: 0
-          value: 0
-          continueTime: 0
-          intervalTime: 0
-      - desc: 10201
-        skillId: 10201
-        skillLevel: 1
-        entityId: -1
-        skillType: 0
-        skillLockType: 0
-        skillReleaseType: 0
-        skillRangeType: 0
-        attackNum: -1
-        speed: -1
-        distanceX: 200
-        distanceY: -1
-        intervalTime: 0
-        continueTime: 0.2
-        intervalHitTime: 0
-        effects:
-        - desc: 
-          skillEffectValueType: 1
-          skillEffectType: 2
-          addType: 2
-          value: 1
-          continueTime: 0
-          intervalTime: 0
-        - desc: 
-          skillEffectValueType: 1
-          skillEffectType: 1
-          addType: 2
-          value: 3
-          continueTime: 0
-          intervalTime: 0
-  - desc: "40001  \u9635\u6CD5"
-    skillId: 40001
-    skillLevels:
-    - desc: 1
-      skills:
-      - desc: 1
-        skillId: 40001
-        skillLevel: 1
-        entityId: 41001
-        skillType: 3
-        skillLockType: 1
-        skillReleaseType: 1
-        skillRangeType: 1
-        attackNum: 0
-        speed: 0
-        distanceX: 400
-        distanceY: 0
-        intervalTime: 0.3
+        invertalTime: 0
+        effects: []
+    buffConfig:
+      buffIds: 
+  - desc: "\u6D4B\u8BD5\u6280\u80FD10003 \u8DDF\u968F \u6301\u7EED"
+    skillId: 10003
+    readyConfig:
+      continueTime: 0
+      actionName: TestName
+      fxName: TestName
+    trackConfig:
+      IsLoop: 0
+      IsBreak: 0
+      ShapeAssetPath: Prefab/Battle/Skill/Skill10003
+      isUseTranslation: 1
+      translationConfig:
+        mulSpeed: 0
+        type: 1
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      isUseRotation: 0
+      rotationConfig:
+        mulSpeed: 1
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      isUseScale: 0
+      scaleConfig:
+        mulSpeed: 1
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 2
+            outSlope: 2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 3
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 1
+          m_RotationOrder: 4
+      isUseHit: 0
+      hitConfig:
         continueTime: 0
-        intervalHitTime: 0
-        effects:
-        - desc: 
-          skillEffectValueType: 2
-          skillEffectType: 2
-          addType: 2
-          value: 0.5
-          continueTime: 0.5
-          intervalTime: 0
+        invertalTime: 0
+        effects: []
+    buffConfig:
+      buffIds: 
+  - desc: "\u6D4B\u8BD5\u6280\u80FD10004 \u8DDF\u968F"
+    skillId: 10004
+    readyConfig:
+      continueTime: 0
+      actionName: TestName
+      fxName: TestName
+    trackConfig:
+      IsLoop: 0
+      IsBreak: 0
+      ShapeAssetPath: Prefab/Battle/Skill/Skill10004
+      isUseTranslation: 1
+      translationConfig:
+        mulSpeed: 15
+        type: 1
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.0044568293
+            value: -0.0015522093
+            inSlope: 0.20119622
+            outSlope: 0.20119622
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.968316
+            value: 0.19237262
+            inSlope: 0.20119622
+            outSlope: 0.20119622
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      isUseRotation: 0
+      rotationConfig:
+        mulSpeed: 1
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      isUseScale: 0
+      scaleConfig:
+        mulSpeed: 1
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 2
+            outSlope: 2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 3
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 1
+          m_RotationOrder: 4
+      isUseHit: 0
+      hitConfig:
+        continueTime: 0
+        invertalTime: 0
+        effects: []
+    buffConfig:
+      buffIds: 
+  - desc: "\u6D4B\u8BD5\u6280\u80FD10005 \u65CB\u8F6C"
+    skillId: 10005
+    readyConfig:
+      continueTime: 0
+      actionName: TestName
+      fxName: TestName
+    trackConfig:
+      IsLoop: 1
+      IsBreak: 0
+      ShapeAssetPath: Prefab/Battle/Skill/Skill10005
+      isUseTranslation: 0
+      translationConfig:
+        mulSpeed: 15
+        type: 1
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.0044568293
+            value: -0.0015522093
+            inSlope: 0.20119622
+            outSlope: 0.20119622
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.968316
+            value: 0.19237262
+            inSlope: 0.20119622
+            outSlope: 0.20119622
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+      isUseRotation: 1
+      rotationConfig:
+        mulSpeed: 360
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 1
+            outSlope: 1
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 1
+            outSlope: 1
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 1
+          m_RotationOrder: 4
+      isUseScale: 0
+      scaleConfig:
+        mulSpeed: 1
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 2
+            outSlope: 2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 3
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 1
+          m_RotationOrder: 4
+      isUseHit: 0
+      hitConfig:
+        continueTime: 0
+        invertalTime: 0
+        effects: []
+    buffConfig:
+      buffIds: 

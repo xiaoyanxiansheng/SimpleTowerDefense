@@ -92,6 +92,7 @@ public class GameObjectPool {
             //son = obj.transform.Find("Core");
             //GameObject.Destroy(obj);
             son = obj.transform;
+            son.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
         }
 
         if (son != null)
@@ -99,7 +100,7 @@ public class GameObjectPool {
             son.name = assetName;
             if (parent != null)
             {
-                son.parent = parent;
+                son.SetParent(parent);
             }
             CommonUtil.TrimGameObejct(son.gameObject);
         }

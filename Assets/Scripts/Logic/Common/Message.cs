@@ -13,12 +13,7 @@ public class MessageManager
         }
         public string name;
         public MessageDelegate messageCall;
-        public object o;
-        public object p1;
-        public object p2;
-        public object p3;
-        public object p4;
-        public object p5;
+        public object[] ps;
     }
 
     public delegate void MessageDelegate(Message m);
@@ -37,9 +32,32 @@ public class MessageManager
             }
     }
 
+    public void SendMessage(string msgName , params object[] ps)
+    {
+        Message m = BeginMessage(msgName);
+        m.ps = ps;
+        SendMessage(m);
+    }
+
     public void SendMessage(Message msg)
     {
         DispatchMessage(msg);
+    }
+
+    public void RegisterMessage(string msgName , MessageDelegate messageCall)
+    {
+        Message m = BeginMessage(msgName);
+        m.messageCall = messageCall;
+
+        if (!_mesageMap.ContainsKey(m.name))
+        {
+            _mesageMap[m.name] = new List<Message>();
+        }
+
+        if (!_mesageMap[m.name].Contains(m))
+        {
+            _mesageMap[m.name].Add(m);
+        }
     }
 
     public void RegisterMessage(Message m)
@@ -92,4 +110,16 @@ public static class MessageConst
     public static string UI_Close = "1002";
     public static string UI_Click = "1003";
     public static string Tut_End = "2001";
+
+    // ’Ω∂∑œ‡πÿ
+    public static string Battle_BattleStart = "Battle_BattleStart";
+    public static string Battle_BattleFail = "Battle_BattleFail";
+    public static string Battle_BattleSuccess = "Battle_BattleSuccess";
+    public static string Battle_EnemyEnter = "Battle_EnemyEnter";
+    public static string Battle_EnemyDie = "Battle_EnemyDie";
+
+    public static string Battle_TowerPlayDownOrUp = "Battle_TowerPlayDownOrUp";
+
+    public static string Battle_Collision = "Battle_Collision";
+
 }

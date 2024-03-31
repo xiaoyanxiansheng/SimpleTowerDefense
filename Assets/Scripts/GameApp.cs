@@ -1,72 +1,51 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class GameApp : MonoBehaviour
 {
-    public GameObject LogicOriginRoot;
-    public GameObject LogicOriginMoveRoot;
-    
-    public UnityEngine.Object EntityConfigAsset;
-    public UnityEngine.Object SkillConfigAsset;
-    public UnityEngine.Object MatrixConfigAsset;
-
-    [NonSerialized]
+    [SerializeField]
+    public LevelConfig LevelConfig;
+    [SerializeField]
     public EntityConfig EntityConfig;
-    [NonSerialized]
+    [SerializeField]
+    public TowerConfig TowerConfig;
+    [SerializeField]
     public SkillConfig SkillConfig;
-    [NonSerialized]
-    public MatrixConfig MatrixConfig;
 
-    public static GameApp Instance;
-
-    public EntityManager entityManager;
-    public AssetManager assetManager;
-    public AStarPath aStarPath;
-
-    public void Awake()
+    private static GameApp instance;
+    public static GameApp Instance
     {
-        Instance = this;
-        //EntityConfig = AssetDatabase.LoadAssetAtPath<EntityConfig>(AssetDatabase.GetAssetPath(EntityConfigAsset));
-        //SkillConfig = AssetDatabase.LoadAssetAtPath<SkillConfig>(AssetDatabase.GetAssetPath(SkillConfigAsset));
-        //MatrixConfig = AssetDatabase.LoadAssetAtPath<MatrixConfig>(AssetDatabase.GetAssetPath(MatrixConfigAsset));
-
-        entityManager = new EntityManager();
-        assetManager = new AssetManager();
-        aStarPath = new AStarPath();
-
-        entityManager.Init();
-        assetManager.Init();
-        aStarPath.Init();
+        get { return instance; }
     }
 
-    public void OnEnable()
+    private void Awake()
     {
-        entityManager.OnEnable();
-        assetManager.OnEnable();
-        aStarPath.OnEnable();
+        instance = this;
+
+        new ResourceManager();
+        new Timer();
+        new LevelManager();
+        new UIManager();
     }
 
-    public EntityConfigData GetEntityConfig(int entityId)
+    private void OnEnable()
     {
-        return EntityConfig.GetEntityConfigData(entityId);
+        // 资源加载器初始化
+        ResourceManager.Instance.Init();
+
+        // 关卡管理器初始化
+        LevelManager.Instance.Init();
+
+        // UI管理器初始化
+        UIManager.Instance.Open(UIViewName.UIMain);
     }
 
-    public SKillConfigDataCombo GetSkillConfig(int skillId , int skillLevel)
+    private void FixedUpdate()
     {
-        return SkillConfig.GetSKillConfigDataCombo(skillId, skillLevel);
+        Timer.Instance.FixedUpdate();
     }
 
-    public SKillConfigDataComboItem GetSkillConfigItem(int skillId, int skillLevel , int skillIndex)
+    private void Update()
     {
-        return SkillConfig.GetSKillConfigDataComboItem(skillId, skillLevel , skillIndex);
-    }
-
-    public void Update()
-    {
-        entityManager.OnUpdate();
-        assetManager.OnUpdate();
-        // aStarPath.OnUpdate();
+        ResourceManager.Instance.Update();
     }
 }

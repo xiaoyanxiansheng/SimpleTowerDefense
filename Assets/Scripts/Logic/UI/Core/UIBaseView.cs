@@ -78,14 +78,15 @@ public abstract class UIBaseView
         uiInitRequestId = 0;
         uiInstanceId = instanceId;
 
+        // 加载完成
+        OnCreate();
+
         // 绑定UICore 应该不需要了
         BindUICore();
 
         //  注册UI事件
         OnRegisterMessage();
 
-        // 加载完成
-        OnCreate();
         if(uiInitFinishCall != null)
         {
             uiInitFinishCall();
@@ -334,13 +335,23 @@ public abstract class UIBaseView
 
     protected void RegisterButtonClick(string path ,UnityAction clickCall)
     {
-        Transform o = GetGameObjectById(uiInstanceId).transform.Find(path);
+        GameObject o = GetGameObject(path);
         if(o == null)
         {
             Debug.LogError("RegisterButtonClick is Error " + path + " " + name);
             return;
         }
         o.GetComponent<Button>().onClick.AddListener(clickCall);
+    }
+
+    protected void RegisterButtonClick(Button btn, UnityAction clickCall)
+    {
+        btn.onClick.AddListener(clickCall);
+    }
+
+    protected GameObject GetGameObject(string path)
+    {
+        return GetGameObjectById(uiInstanceId).transform.Find(path).gameObject;
     }
 
     #region 子类重写

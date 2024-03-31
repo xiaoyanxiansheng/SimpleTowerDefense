@@ -9,6 +9,7 @@ public class EntityConfigData
     public string desc = "";
     public int EntityId = 0;
     public GameObject prefab;
+    public string prefabPath;
     public int Health;
     public float MoveSpeed;
     public int SkillId;

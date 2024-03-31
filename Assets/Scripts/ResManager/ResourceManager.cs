@@ -10,6 +10,12 @@ public enum LoadGameObjectType
 
 public class ResourceManager{
 
+    public static ResourceManager Instance;
+    public ResourceManager()
+    {
+        Instance = this;
+    }
+
     public static bool isLog = false;
 
     public static string bundleRootPath = Application.dataPath + "/AssetBundles/";
