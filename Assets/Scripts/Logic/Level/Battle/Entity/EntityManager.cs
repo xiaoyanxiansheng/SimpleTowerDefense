@@ -7,25 +7,30 @@
  */
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EntityManager
 {
     public static EntityManager Instance;
-    private BattleEnemyConfig _battleEnemyConfig;
 
-    private List<EntityBase> _entitys = new List<EntityBase>();        // 怪物
+    private List<LevelEnemyData> _levelEnemyDatas;
 
-    private List<EnemyBase> _enemys = new List<EnemyBase>();        // 怪物
+    //private List<EntityBase> _entitys = new List<EntityBase>();        // 怪物
+    private Dictionary<int , EntityBase> _entityMaps = new Dictionary<int , EntityBase>();
+
+    //private List<EnemyBase> _enemys = new List<EnemyBase>();        // 怪物
+    private Dictionary<int , EnemyBase> _enemyMaps = new Dictionary<int , EnemyBase>();
+
     private List<TowerBase> _towers = new List<TowerBase>();        // 防御塔
+
+    private List<int> _waitDeleteMonoIds = new List<int>();
 
     private float _prebattleContinueTime = 0;
 
-    public EntityManager(BattleEnemyConfig battleEnemyConfig) 
+    public EntityManager(List<LevelEnemyData> enemyDatas) 
     {
         Instance = this;
-        _battleEnemyConfig = battleEnemyConfig;
+        _levelEnemyDatas = enemyDatas;
     }
 
     public void StartBattle()
@@ -35,22 +40,17 @@ public class EntityManager
 
     public void Update(float delta , float battleContinueTime)
     {
-        //for (int i = 0; i < _enemys.Count; i++)
-        //{
-        //    _enemys[i].Update(delta);
-        //}
-        //for (int i = 0; i < _towers.Count; i++)
-        //{
-        //    _towers[i].Update(delta);
-        //}
-        //for (int i = 0; i < _skills.Count; i++)
-        //{
-        //    _skills[i].Update(delta);
-        //}
-
-        for (int i = 0; i < _entitys.Count; i++)
+        // 晚一帧删除
+        foreach(var entityMonoId in _waitDeleteMonoIds)
         {
-            _entitys[i].Update(delta);
+            DestoryInstance(entityMonoId);
+            _entityMaps.Remove(entityMonoId);
+        }
+        _waitDeleteMonoIds.Clear();
+
+        foreach (var entity in _entityMaps.Values)
+        {
+            entity.Update(delta);
         }
 
         UpdateEnemyEnterBattle(battleContinueTime);
@@ -58,21 +58,43 @@ public class EntityManager
 
     private void UpdateEnemyEnterBattle(float battleContinueTime)
     {
-        for (int i = 0; i < _battleEnemyConfig.battleEnemyConfigDatas.Count; i++)
+        for (int i = 0; i < _levelEnemyDatas.Count; i++)
         {
-            BattleEntityConfigData battleEnemyConfigData = _battleEnemyConfig.battleEnemyConfigDatas[i];
-            if (battleEnemyConfigData.enterTime > _prebattleContinueTime && battleEnemyConfigData.enterTime <= battleContinueTime)
+            LevelEnemyData enemyData = _levelEnemyDatas[i];
+            if (enemyData.enterTime > _prebattleContinueTime && enemyData.enterTime <= battleContinueTime)
             {
-                MessageManager.Instance.SendMessage(MessageConst.Battle_EnemyEnter, null, i);
-                CreateEnemy(battleEnemyConfigData.entityId , (ennemy) =>
+                CreateEnemy<EnemyCommon>(enemyData.entityId , (ennemy) =>
                 {
-                    EnemyCommon e = (EnemyCommon)ennemy;
-                    e.SetEntityId(battleEnemyConfigData.entityId);
-                    e.EnterBattle(CommonUtil.CellConvertVec(battleEnemyConfigData.startPoint), CommonUtil.CellConvertVec(battleEnemyConfigData.endPoint));
+                    EnemyBase e = (EnemyBase)ennemy;
+                    e.EnterBattle(enemyData.start, enemyData.end);
                 });
             }
         }
         _prebattleContinueTime = battleContinueTime;
+    }
+
+    public void DestoryEntity(int entityMonoId)
+    {
+        _waitDeleteMonoIds.Add(entityMonoId);
+    }
+
+    public void DestoryEnemy(int entityMonoId)
+    {
+        EntityBase enemy = GetEntity(entityMonoId);
+        if(enemy != null)
+        {
+            DestoryEntity(entityMonoId);
+        }
+    }
+
+    public void DestoryInstance(int entityMonoId)
+    {
+        EntityBase entity = GetEntity(entityMonoId);
+        if (entity != null)
+        {
+            entity.Destory();
+            ResourceManager.DestoryGameObject(entity.GetEntityInstanceId());
+        }
     }
 
     public void CreateEntity<T>(string prefabPath, Action<EntityBase> createFinishCall) where T : EntityBase , new()
@@ -80,35 +102,37 @@ public class EntityManager
         ResourceManager.CreateGameObjectAsync(LoadGameObjectType.GameObject, prefabPath, (instanceId, requestId) =>
         {
             EntityBase entity = new T();
-            entity.SetInstanceId(instanceId);
+            entity.InitEntityInstance(instanceId);
             if (entity.GetGameObject().GetComponent<RectTransform>() == null) entity.GetGameObject().AddComponent<RectTransform>();
-            _entitys.Add(entity);
-
+            _entityMaps[entity.GetEntityMonoId()] = entity;
+            entity.GetGameObject().name += "_" + instanceId;
             createFinishCall(entity);
         });
     }
 
     public void CreateTower(int towerId , Action<EntityBase> createFinishCall)
     {
-        string prefabPath = GameApp.Instance.TowerConfig.GetTowerConfigData(towerId).prefabPath;
+        string prefabPath = GameApp.Instance.EntityConfig.GetEntityConfigData(towerId).prefabPath;
         CreateEntity<TowerBase>(prefabPath, (entity) =>
         {
+            entity.InitEntity(towerId);
             entity.SetParent(LevelManager.Instance.battle.BattleRoot);
             createFinishCall(entity);
         });
     }
 
-    public void CreateEnemy(int entityId, Action<EntityBase> createFinishCall)
+    public void CreateEnemy<T>(int entityId, Action<EntityBase> createFinishCall) where T : EntityBase, new()
     {
         string prefabPath = GameApp.Instance.EntityConfig.GetEntityConfigData(entityId).prefabPath;
-        CreateEntity<EnemyCommon>(prefabPath, (entity) =>
+        CreateEntity<T>(prefabPath, (entity) =>
         {
             EntityBehaviour entityBehaviour = entity.GetGameObject().GetComponent<EntityBehaviour>();
             if (entityBehaviour == null) entityBehaviour = entity.GetGameObject().AddComponent<EntityBehaviour>();
-            entityBehaviour.entity = entity;
+            entityBehaviour.entityMonoId = entity.GetEntityMonoId();
 
+            entity.InitEntity(entityId);
             entity.SetParent(LevelManager.Instance.battle.BattleRoot);
-            _enemys.Add((EnemyBase)entity);
+            _enemyMaps[entity.GetEntityMonoId()] = (EnemyBase)entity;
             createFinishCall(entity);
         });
     }
@@ -120,8 +144,9 @@ public class EntityManager
         {
             EntityBehaviour entityBehaviour = entity.GetGameObject().GetComponent<EntityBehaviour>();
             if (entityBehaviour == null) entityBehaviour = entity.GetGameObject().AddComponent<EntityBehaviour>();
-            entityBehaviour.entity = entity;
+            entityBehaviour.entityMonoId = entity.GetEntityMonoId();
 
+            entity.InitEntity(skillId);
             entity.SetParent(LevelManager.Instance.battle.BattleRoot);
             createFinishCall(entity);
         });
@@ -129,15 +154,22 @@ public class EntityManager
 
     public void UpdateAllEnemyCellPaths()
     {
-        foreach (var entity in _enemys)
+        foreach (var entity in _enemyMaps.Values)
         {
             ((EnemyCommon)entity).UpdateCellPaths();
         }
     }
 
-    public List<EnemyBase> GetEnemies()
+    public EntityBase GetEntity(int entityMonoId)
     {
-        return _enemys;
+        EntityBase entity = null;
+        _entityMaps.TryGetValue(entityMonoId, out entity);
+        return entity;
+    }
+
+    public Dictionary<int ,EnemyBase> GetEnemies()
+    {
+        return _enemyMaps;
     }
 
     #region 距离相关
@@ -149,7 +181,7 @@ public class EntityManager
     /// <param name="entitys"></param>
     /// <param name="n"></param>
     /// <returns></returns>
-    public void SearchClosestNEntity(ref List<EnemyBase> searchEnemys ,Vector2 myPosition, List<EnemyBase> entitys , float distance, int n)
+    public void SearchClosestNEntity(ref List<int> searchEnemys ,Vector2 myPosition, Dictionary<int ,EnemyBase> entitys , float distance, int n)
     {
         // 确保n不大于列表大小
         n = Mathf.Min(n, entitys.Count);
@@ -157,26 +189,32 @@ public class EntityManager
         // 使用SortedList模拟最小堆，键为距离，值为位置
         SortedList<float, EnemyBase> closestPositions = new SortedList<float, EnemyBase>(new DuplicateKeyComparer<float>());
 
-        foreach (var e in entitys)
+        foreach (var e in entitys.Values)
         {
-            float distanceSqr = (e.GetPos() - myPosition).magnitude;
-
-            if(distanceSqr <= distance)
+            if (e.IsEnterBattle())
             {
-                // 添加当前点到"最小堆"，如果"最小堆"已满，且当前点距离小于最大距离点，则替换
-                if (closestPositions.Count < n)
+                float distanceSqr = (e.GetPos() - myPosition).magnitude;
+
+                if (distanceSqr <= distance)
                 {
-                    closestPositions.Add(distanceSqr, e);
-                }
-                else if (distanceSqr < closestPositions.Keys[n - 1])
-                {
-                    closestPositions.RemoveAt(n - 1);
-                    closestPositions.Add(distanceSqr, e);
+                    // 添加当前点到"最小堆"，如果"最小堆"已满，且当前点距离小于最大距离点，则替换
+                    if (closestPositions.Count < n)
+                    {
+                        closestPositions.Add(distanceSqr, e);
+                    }
+                    else if (distanceSqr < closestPositions.Keys[n - 1])
+                    {
+                        closestPositions.RemoveAt(n - 1);
+                        closestPositions.Add(distanceSqr, e);
+                    }
                 }
             }
         }
 
-        searchEnemys.AddRange(closestPositions.Values);
+        foreach (var e in closestPositions.Values) 
+        {
+            searchEnemys.Add(e.GetEntityMonoId());
+        }
     }
 
     // 允许SortedList有重复键

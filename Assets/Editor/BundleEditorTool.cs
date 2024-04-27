@@ -90,7 +90,7 @@ public class BundleEditorTool {
             // 文件名 包含路径
             string assetDirectoryName = assetPath.Replace("Assets/BuildResource/", string.Empty);
             assetDirectoryName = string.Format("{0}/{1}", Path.GetDirectoryName(assetDirectoryName), assetInBundleName);
-            //assetDirectoryName = assetDirectoryName.ToLower();
+            assetDirectoryName = assetDirectoryName.ToLower();
             assetDirectoryName = assetDirectoryName.Replace("\\", "/");
              
             string abName = GetABName(assetDirectoryName);

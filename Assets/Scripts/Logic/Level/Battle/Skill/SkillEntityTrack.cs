@@ -3,30 +3,23 @@ using UnityEngine;
 
 public class SkillTrackEntity : EntityBase
 {
-    private EntityBase _owerEntity;
+    private int _owerEntityMonoId;
 
-    public SkillTrackEntity() : base() { }
-    public SkillTrackEntity(int instanceId, int entityId) : base(instanceId, entityId)
+    //public SkillTrackEntity() : base() { }
+
+    public void SetOwerEntity(int owerEntityMonoId)
     {
+        this._owerEntityMonoId = owerEntityMonoId;
     }
 
-    public void SetOwerEntity(EntityBase owerEntity)
+    public int GetOwerEntityMonoId()
     {
-        this._owerEntity = owerEntity;
-    }
-
-    public EntityBase GetOwerEntity()
-    {
-        return _owerEntity;
+        return _owerEntityMonoId;
     }
 
     public void EnterBattle(Vector2 pos)
     {
         ShowSelf(pos);
-    }
-
-    public void ExitBattle()
-    {
-
+        base.EnterBattle();
     }
 }

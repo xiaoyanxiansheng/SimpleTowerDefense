@@ -8,7 +8,7 @@ public class CollisionBehaviour : MonoBehaviour
     {
         if (collision == null) return;
 
-        MessageManager.Instance.SendMessage(MessageConst.Battle_Collision,GetComponent<EntityBehaviour>().entity, collision.GetComponent<EntityBehaviour>().entity);
+        MessageManager.Instance.SendMessage(MessageConst.Battle_Collision,GetComponent<EntityBehaviour>().entityMonoId, collision.GetComponent<EntityBehaviour>().entityMonoId);
     }
 
     // 当其他游戏对象停止与这个游戏对象的EdgeCollider2D碰撞时调用

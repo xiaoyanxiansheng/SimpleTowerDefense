@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public static class CommonUtil
@@ -97,6 +96,6 @@ public static class CommonUtil
         Vector2 direction = end - start;
         float angleRad = Mathf.Atan2(direction.y, direction.x);
         float angleDeg = (180 / Mathf.PI) * angleRad;
-        return angleDeg;
+        return angleDeg - 90;   // ”ÎY÷·µƒΩ«∂»
     }
 }

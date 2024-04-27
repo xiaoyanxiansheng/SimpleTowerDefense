@@ -33,6 +33,6 @@ public class UIMain : UIBaseView
 
     private void ClickTest()
     {
-         UIManager.Instance.Open(UIViewName.UIBattleMain);
+         UIManager.Instance.Open(UIViewName.UIChapterMain);
     }
 }

@@ -199,6 +199,11 @@ public abstract class UIBaseView
         // TODO 3 需要处理
     }
 
+    protected List<object> GetParams()
+    {
+        return openParams;
+    }
+
     private void ClearParams()
     {
         openParams.Clear();
@@ -344,9 +349,34 @@ public abstract class UIBaseView
         o.GetComponent<Button>().onClick.AddListener(clickCall);
     }
 
+    protected void RegisterButtonClick(string path, Action<int> clickCall , int p)
+    {
+        GameObject o = GetGameObject(path);
+        if (o == null)
+        {
+            Debug.LogError("RegisterButtonClick is Error " + path + " " + name);
+            return;
+        }
+        o.GetComponent<Button>().onClick.AddListener(() => {
+            clickCall(p);
+        });
+    }
+
+    protected void RegisterButtonClick(Button btn, Action<int> clickCall, int p)
+    {
+        btn.onClick.AddListener(() => {
+            clickCall(p);
+        });
+    }
+
     protected void RegisterButtonClick(Button btn, UnityAction clickCall)
     {
         btn.onClick.AddListener(clickCall);
+    }
+
+    protected GameObject GetGameObject()
+    {
+        return GetGameObjectById(uiInstanceId).gameObject;
     }
 
     protected GameObject GetGameObject(string path)

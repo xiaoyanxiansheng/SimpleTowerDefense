@@ -11,6 +11,8 @@ using UnityEngine;
 public class UIManager{
     public static UIManager Instance;
 
+    public Canvas canvas;
+
     private List<UIBaseView> _uiViews = new List<UIBaseView>();
     private List<UIBaseCollect> _initViewCollects = new List<UIBaseCollect>();
     private List<UIBaseCollect> _openViewCollects = new List<UIBaseCollect>();
@@ -18,6 +20,7 @@ public class UIManager{
     public UIManager()
     {
         Instance = this;
+        canvas = GameObject.Find("UIRoot").GetComponent<Canvas>();
     }
 
     public void InitBase()

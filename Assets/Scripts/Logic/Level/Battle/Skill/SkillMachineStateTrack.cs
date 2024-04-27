@@ -1,11 +1,10 @@
 using UnityEngine;
 using static SkillConfig;
-using static TowerConfig;
 
 public class SkillMachineStateTrack : MachineStateBase
 {
-    private EntityBase _attacker;
-    private EntityBase _beAttacker;
+    private int _attackerMonoId;
+    private int _beAttackerMonoId;
     private TrackConfig _config;
     private SkillTrackEntity _skill;
     private bool isReady = false;
@@ -19,21 +18,25 @@ public class SkillMachineStateTrack : MachineStateBase
         isReady = false;
         passedTime = 0;
         int skillId = (int)stateMachine.ps[0];
-        _attacker = (EntityBase)stateMachine.ps[1];
-        _beAttacker = (EntityBase)stateMachine.ps[2];
+        _attackerMonoId = (int)stateMachine.ps[1];
+        _beAttackerMonoId = (int)stateMachine.ps[2];
         _config = GameApp.Instance.SkillConfig.GetSkillConfigData(skillId).trackConfig;
         EntityManager.Instance.CreateSkillTrack(skillId, (entity) =>
         {
             isReady = true;
 
-            Vector2 startPos = _attacker.GetPos();
-            Vector2 endPos = _beAttacker.GetPos();
+            EntityBase attack = EntityManager.Instance.GetEntity(_attackerMonoId);
+            EntityBase beAttacker = EntityManager.Instance.GetEntity(_beAttackerMonoId);
 
-            _skill = (SkillTrackEntity)entity;
-            _skill.SetOwerEntity(_attacker);
-            _skill.SetEntityId(skillId);
-            _skill.SetRotationZ(_attacker.GetRotation().z);
-            _skill.EnterBattle(startPos);
+            if(attack != null && beAttacker != null)
+            {
+                Vector2 startPos = attack.GetPos();
+                Vector2 endPos = beAttacker.GetPos();
+                _skill = (SkillTrackEntity)entity;
+                _skill.SetOwerEntity(_attackerMonoId);
+                _skill.SetRotationZ(attack.GetRotation().z);
+                _skill.EnterBattle(startPos);
+            }
         });
     }
 
@@ -61,12 +64,20 @@ public class SkillMachineStateTrack : MachineStateBase
 
     private void UpdateTranslation()
     {
+        EntityBase attacker = EntityManager.Instance.GetEntity(_attackerMonoId);
+        EntityBase beAttacker = EntityManager.Instance.GetEntity(_beAttackerMonoId);
+        if (attacker == null || beAttacker == null)
+        {
+            LoopOrFinish();
+            return;
+        }
+
         if (!_config.isUseTranslation) return;
         if(_config.translationConfig.type == TrackConfig.TranslationConfig.TranslationType.Point)
         {
             float distanceRate = _config.translationConfig.curve.Evaluate(passedTime * _config.translationConfig.mulSpeed);
-            _skill.SetRotationZ(CommonUtil.CalAngle(_attacker.GetPos(), _beAttacker.GetPos()));
-            _skill.SetPos(_attacker.GetPos() * distanceRate + (1 - distanceRate) * _beAttacker.GetPos());
+            _skill.SetRotationZ(CommonUtil.CalAngle(attacker.GetPos(), beAttacker.GetPos()));
+            _skill.SetPos(attacker.GetPos() * (1-distanceRate) + distanceRate * beAttacker.GetPos());
             if (distanceRate > 0.9999f) LoopOrFinish();
         }
         else
@@ -74,13 +85,13 @@ public class SkillMachineStateTrack : MachineStateBase
             // 跟随性 并且没有速度
             if(_config.translationConfig.mulSpeed == 0)
             {
-                if(Vector2.Distance(_attacker.GetPos(),_beAttacker.GetPos()) > ((TowerBase)_attacker).skillConfig.AttackDistance)
+                if(Vector2.Distance(attacker.GetPos(),beAttacker.GetPos()) > ((TowerBase)attacker).GetBuffAttackDistance())
                 {
                     LoopOrFinish();
                 }
                 else
                 {
-                    _skill.SetPos(_beAttacker.GetPos());
+                    _skill.SetPos(beAttacker.GetPos());
                 }
             }
             // 追踪 TODO
@@ -88,7 +99,7 @@ public class SkillMachineStateTrack : MachineStateBase
             {
                 float angle = _skill.GetRotation().z / 180 * Mathf.PI;
                 Vector2 forward = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle));
-                Vector2 dragForward = (_beAttacker.GetPos() - _skill.GetPos()).normalized;
+                Vector2 dragForward = (beAttacker.GetPos() - _skill.GetPos()).normalized;
                 float strength = _config.translationConfig.curve.Evaluate(passedTime);
                 dragForward *= strength;
                 Vector2 newForward = (forward + dragForward).normalized;
@@ -107,7 +118,7 @@ public class SkillMachineStateTrack : MachineStateBase
     {
         if (!_config.isUseRotation) return;
         float rot = _config.rotationConfig.curve.Evaluate(passedTime * _config.rotationConfig.mulSpeed);
-        _skill.SetRotation(new Vector3(0, 0, rot * 360));
+        _skill.SetRotation(new Vector3(0, 0, -rot * 360));
         if (rot > 0.9999f) LoopOrFinish();
     }
     private void UpdateScale()
@@ -120,9 +131,17 @@ public class SkillMachineStateTrack : MachineStateBase
 
     private void LoopOrFinish()
     {
+        EntityBase attack = EntityManager.Instance.GetEntity(_attackerMonoId);
+        EntityBase beAttack = EntityManager.Instance.GetEntity(_beAttackerMonoId);
+        if (attack == null || beAttack == null) 
+        {
+            OnSkillFinishCall();
+            return;
+        }
+
         if (_config.IsLoop)
         {
-            EntityBase entity = EntityManager.Instance.SearchOneEntity(_attacker.GetPos(), ((TowerBase)_attacker).skillConfig.AttackDistance);
+            EntityBase entity = EntityManager.Instance.SearchOneEntity(attack.GetPos(), ((TowerBase)attack).GetBuffAttackDistance());
             if (entity == null)
             {
                 OnSkillFinishCall();
@@ -132,10 +151,5 @@ public class SkillMachineStateTrack : MachineStateBase
         {
             OnSkillFinishCall();
         }
-    }
-
-    public EntityBase GetAttackerEntity()
-    {
-        return _attacker;
     }
 }

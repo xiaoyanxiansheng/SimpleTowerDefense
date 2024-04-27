@@ -48,7 +48,9 @@ public class EntityAStarPath
         ClearWeight();
         foreach (CellData cellData in cellDatas)
         {
-            _weightList[cellData.X][cellData.Y] = cellData.MoveWeight;
+            int moveWieght = cellData.MoveWeight;
+            if (cellData.CellType != CellType.Move) moveWieght = Define.CELL_MAXWEIGHT;
+            _weightList[cellData.X][cellData.Y] = moveWieght;
         }
 
         GetOptimalRoute(start, end, ref pathPoints);

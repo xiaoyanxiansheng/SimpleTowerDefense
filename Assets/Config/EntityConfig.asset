@@ -15,121 +15,84 @@ MonoBehaviour:
   EntityConfigDatas:
   - desc: Tower_10001
     EntityId: 10001
-    prefab: {fileID: 7525510868778550327, guid: 1014a1e83eb92d945ab08d585dd1e20e, type: 3}
-    prefabPath: Prefab/Battle/Entity/Tower01
-    Health: 1
-    MoveSpeed: 0
-    SkillId: 10101
-    SkillLevel: 1
+    prefabPath: Prefab/Battle/Tower/Tower01
+    DataConfig:
+      ps:
+      - 10001
+      - 1
+      - 3
+      - 300
+      - 10002
+      - 1
   - desc: Tower_10002
     EntityId: 10002
-    prefab: {fileID: 7525510868778550327, guid: b640bb21b99cc444ba70c6eeb044bdf3, type: 3}
     prefabPath: 
-    Health: 1
-    MoveSpeed: 0
-    SkillId: 10102
-    SkillLevel: 1
+    DataConfig:
+      ps: []
   - desc: Tower_10003
     EntityId: 10003
-    prefab: {fileID: 7525510868778550327, guid: 64aca5ad9f3187f4f903e5795ef0c62c, type: 3}
     prefabPath: 
-    Health: 1
-    MoveSpeed: 0
-    SkillId: 10201
-    SkillLevel: 1
+    DataConfig:
+      ps: []
   - desc: Tower_10004
     EntityId: 10004
-    prefab: {fileID: 7525510868778550327, guid: 42e4e765a327b90428a7d6e60afe265c, type: 3}
     prefabPath: 
-    Health: 1
-    MoveSpeed: 0
-    SkillId: 20001
-    SkillLevel: 1
+    DataConfig:
+      ps: []
   - desc: Tower_10005
     EntityId: 10005
-    prefab: {fileID: 7525510868778550327, guid: 72ec405b6e9c95443947fdceee6dd873, type: 3}
     prefabPath: 
-    Health: 1
-    MoveSpeed: 0
-    SkillId: 20001
-    SkillLevel: 1
-  - desc: Enemy_20001
+    DataConfig:
+      ps: []
+  - desc: Boss_Snake
     EntityId: 20001
-    prefab: {fileID: 7525510868778550327, guid: 6c0b49fc83123514bbc1edb3e75a47bb, type: 3}
-    prefabPath: Prefab/Battle/Entity/Enemy01
-    Health: 5
-    MoveSpeed: 5
-    SkillId: 0
-    SkillLevel: 0
-  - desc: Enemy_20002
+    prefabPath: Prefab/Battle/Entity/Boss/Snake001_Body
+    DataConfig:
+      ps: []
+  - desc: Boss_SnakeBody
     EntityId: 20002
-    prefab: {fileID: 7525510868778550327, guid: 91f7167f754a61d478e212f0ff18790b, type: 3}
-    prefabPath: 
-    Health: 0
-    MoveSpeed: 0.5
-    SkillId: 0
-    SkillLevel: 0
+    prefabPath: Prefab/Battle/Entity/Boss/Snake001_Body
+    DataConfig:
+      ps:
+      - 50
+      - 200
   - desc: Enemy_20003
     EntityId: 20003
-    prefab: {fileID: 7525510868778550327, guid: fc06adb8f1f34894f8a5166539b48a14, type: 3}
     prefabPath: 
-    Health: 0
-    MoveSpeed: 0.5
-    SkillId: 0
-    SkillLevel: 0
+    DataConfig:
+      ps: []
   - desc: Bullet_30001
     EntityId: 30001
-    prefab: {fileID: 6277192594744025459, guid: 91c7397529b00e3419b625e26f1d962d, type: 3}
     prefabPath: 
-    Health: 0
-    MoveSpeed: 0
-    SkillId: 0
-    SkillLevel: 0
+    DataConfig:
+      ps: []
   - desc: Bullet_30002
     EntityId: 30002
-    prefab: {fileID: 6277192594744025459, guid: 253f139423b88224584889f2dc8cb501, type: 3}
     prefabPath: 
-    Health: 0
-    MoveSpeed: 0
-    SkillId: 0
-    SkillLevel: 0
+    DataConfig:
+      ps: []
   - desc: Bullet_30003
     EntityId: 30003
-    prefab: {fileID: 6277192594744025459, guid: 831d25979684f9d47b3e7144603eb186, type: 3}
     prefabPath: 
-    Health: 0
-    MoveSpeed: 0
-    SkillId: 0
-    SkillLevel: 0
+    DataConfig:
+      ps: []
   - desc: Bullet_30004
     EntityId: 30004
-    prefab: {fileID: 6277192594744025459, guid: 08f00410664efc84099933508f1f7cc4, type: 3}
     prefabPath: 
-    Health: 0
-    MoveSpeed: 0
-    SkillId: 0
-    SkillLevel: 0
+    DataConfig:
+      ps: []
   - desc: Matrix_40001
     EntityId: 40001
-    prefab: {fileID: 6277192594744025459, guid: b83f0edb6037789409a78ffc5f186ad6, type: 3}
     prefabPath: 
-    Health: 0
-    MoveSpeed: 0
-    SkillId: 40001
-    SkillLevel: 1
+    DataConfig:
+      ps: []
   - desc: Matrix_Entity_41001
     EntityId: 41001
-    prefab: {fileID: 6277192594744025459, guid: bc01af9b0225ee54aba9af41089aa23c, type: 3}
     prefabPath: 
-    Health: 0
-    MoveSpeed: 0
-    SkillId: 0
-    SkillLevel: 0
+    DataConfig:
+      ps: []
   - desc: Player_50001
     EntityId: 50001
-    prefab: {fileID: 7525510868778550327, guid: b3d0a55e3c63e8e43b749257cbc24cda, type: 3}
     prefabPath: 
-    Health: 0
-    MoveSpeed: 2
-    SkillId: 10201
-    SkillLevel: 1
+    DataConfig:
+      ps: []

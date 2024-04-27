@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class CommonBattle : BattleBase
 {
-    public CommonBattle(GameObject battleRoot, BattleConfig battleConfig) : base(battleRoot, battleConfig)
+    public CommonBattle(GameObject battleRoot, InitData initData) : base(battleRoot, initData)
     {
 
     }

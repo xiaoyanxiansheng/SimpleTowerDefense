@@ -1,5 +1,6 @@
 using System;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum EntityMoveFinishType
@@ -43,6 +44,10 @@ public class EntityMoveComponentBase : EntityComponentBase
         _speed = speed;
         return this;
     }
+    public float GetSpeed()
+    {
+        return _speed;
+    }
 
     public EntityMoveComponentBase SetDir(Vector2 start, Vector2 end)
     {
@@ -58,7 +63,7 @@ public class EntityMoveComponentBase : EntityComponentBase
         _isMoving = true;
     }
 
-    public override void Update()
+    public override void Update(float delta)
     {
         if (!_isMoving) return;
 
@@ -76,7 +81,7 @@ public class EntityMoveComponentBase : EntityComponentBase
             return;
         }
 
-        _curPos += (_endPos - _startPos).normalized * _speed;
+        _curPos += (_endPos - _startPos).normalized * _speed * delta;
 
         OnUpdatePosition();
     }
@@ -98,7 +103,11 @@ public class EntityMoveComponentBase : EntityComponentBase
     protected virtual void OnUpdatePosition()
     {
         GameObject obj = ResourceManager.GetGameObjectById(entity.GetEntityInstanceId());
-        if (obj) obj.GetComponent<RectTransform>().localPosition = _curPos;
+        if (obj) 
+        {
+            obj.GetComponent<RectTransform>().localPosition = _curPos;
+        }
+        
     }
     protected virtual void OnMoveOutAreaFinish() 
     {
@@ -123,5 +132,11 @@ public class EntityMoveComponentBase : EntityComponentBase
     public override void Start()
     {
         
+    }
+
+    public void SetRotation(float angleDeg)
+    {
+        GameObject obj = ResourceManager.GetGameObjectById(entity.GetEntityInstanceId());
+        obj.GetComponent<RectTransform>().localRotation = Quaternion.Euler(new Vector3(0, 0, angleDeg - 90));
     }
 }

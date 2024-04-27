@@ -1,55 +1,88 @@
 /*
     最简单敌人
+        能力：路径移动
  */
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyCommon : EnemyBase
 {
-    private Vector2 _targetPos;
-    private EntityPathMoveCommonComponent _movePathComponent;
-    public EnemyCommon() : base() { }
-    public EnemyCommon(int instanceId,int entityId) : base(instanceId, entityId)
+    protected EntityPathMoveComponent movePathComponent;        // 格子到格子的移动方式
+    protected List<Vector2> movePosPaths = new List<Vector2>();
+    //public EnemyCommon() : base() { }
+
+    protected override void OnInitEntity()
     {
-        SetInstanceId(instanceId);
-        SetEntityId(entityId);
+        base.OnInitEntity();
+        movePathComponent = new EntityPathMoveComponent(this, MoveFinishCall, MoveCellFinishCall);
+        AddComponent(movePathComponent);
     }
 
-    public override void SetEntityId(int entityId)
-    {
-        base.SetEntityId(entityId);
-        _movePathComponent = new EntityPathMoveCommonComponent(this, MoveFinishCall, MoveCellFinishCall);
-        AddComponent(_movePathComponent);
-    }
-
+    /// <summary>
+    /// 进入战斗
+    /// </summary>
+    /// <param name="startPos"></param>
+    /// <param name="endPos"></param>
     public override void EnterBattle(Vector2 startPos , Vector2 endPos)
     {
-        _targetPos = endPos;
+        base.EnterBattle(startPos, endPos);
+        PreEnterBattle(startPos);
+        movePathComponent.SetSpeed(GetBuffMoveSpeed());
+        movePathComponent.Move(CalMovePosPaths(ref movePosPaths, startPos, endPos));
+    }
+
+    public void PreEnterBattle(Vector2 startPos , bool isShow = true)
+    {
         GameObject obj = ResourceManager.GetGameObjectById(GetEntityInstanceId());
         obj.transform.localPosition = startPos;
-        obj.gameObject.SetActive(true);
-        _movePathComponent.Move(startPos, endPos);
-        _movePathComponent.SetSpeed(GetMoveSpeed());
+        obj.gameObject.SetActive(isShow);
     }
 
-    public void UpdateCellPaths()
+    /// <summary>
+    /// 计算战斗路径
+    /// </summary>
+    /// <param name="movePosPaths"></param>
+    /// <param name="startPos"></param>
+    /// <param name="endPos"></param>
+    /// <returns></returns>
+    protected virtual List<Vector2> CalMovePosPaths(ref List<Vector2> movePosPaths, Vector2 startPos, Vector2 endPos)
     {
-        _movePathComponent.Move(_movePathComponent.GetCurPos(), _targetPos);
+        movePosPaths.Clear();
+        LevelManager.Instance.battle.GetBattleCellManager().GetMovePosPaths(ref movePosPaths, startPos, endPos);
+        return movePosPaths;
     }
 
-    private void MoveFinishCall(int type)
+    /// <summary>
+    /// 更新战斗路径
+    /// </summary>
+    public virtual void UpdateCellPaths()
     {
-        // Debug.Log("MoveFinishCall");
+        movePathComponent.Move(CalMovePosPaths(ref movePosPaths, movePathComponent.GetCurPos(), endPos));
     }
 
-    private void MoveCellFinishCall()
+    protected virtual void MoveFinishCall(int type)
     {
-        // Debug.Log("MoveCellFinishCall");
     }
 
-    public override void ExitBattle()
+    protected virtual void MoveCellFinishCall()
     {
-        
+    }
+
+    protected virtual void MoveUpdateCall(Vector2 pos, Vector3 posWS)
+    {
+
+    }
+
+    public EntityPathMoveComponent GetMoveComponent()
+    {
+        return movePathComponent;
+    }
+
+    public override void SetBuffMoveSpeed(float speed)
+    {
+        base.SetBuffMoveSpeed(speed);
+        movePathComponent.SetSpeed(speed);
     }
 }

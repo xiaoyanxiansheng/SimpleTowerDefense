@@ -14,11 +14,5 @@ public abstract class EntityComponentBase
     }
 
     public abstract void Start();
-    public abstract void Update();
-
-    public void SetRotation(float angleDeg)
-    {
-        GameObject obj = ResourceManager.GetGameObjectById(entity.GetEntityInstanceId());
-        obj.GetComponent<RectTransform>().localRotation = Quaternion.Euler(new Vector3(0, 0, angleDeg - 90));
-    }
+    public abstract void Update(float delta);
 }

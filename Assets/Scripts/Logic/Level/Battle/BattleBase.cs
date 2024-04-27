@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Unity.Mathematics;
+using static BattleBase;
 
 /*
     BattleBase 的管理责任
@@ -18,6 +21,19 @@ public enum BattleStatusType
 
 public abstract class BattleBase
 {
+
+    public class InitData
+    {
+        public int chapterIndex;
+        public int levelIndex;
+        public bool isFixPaths;
+        public List<int2> canWalkPoints;
+        public List<int2> canPlacePoints;
+        public List<LevelEnemyData> enemys;
+    }
+
+    private InitData _initData;
+
     private BattleStatusType _battleStatusType = BattleStatusType.None;
     private float _battleContinueTime = 0;
     private int _timerId;
@@ -26,17 +42,22 @@ public abstract class BattleBase
     public StateMachineManager stateMachineManager;
     public SkillManager skillManager;
     public GameObject BattleRoot;
+    public GameObject Battle3DRoot;
 
-    public BattleBase(GameObject battleRoot, BattleConfig levelConfigData)
+    public BattleBase(GameObject battleRoot, InitData initData)
     {
         BattleRoot = battleRoot;
-        entityManager = new EntityManager(levelConfigData.battleEnemyConfig);
-        battleCellManager = new BattleCellData(levelConfigData.battleWaysConfig);
+        _initData = initData;
+        Battle3DRoot = battleRoot.transform.Find("3DRoot").gameObject;
+        entityManager = new EntityManager(initData.enemys);
+        battleCellManager = new BattleCellData(initData.isFixPaths, initData.canWalkPoints,initData.canPlacePoints);
         stateMachineManager = new StateMachineManager();
         skillManager = new SkillManager();
 
         // 注册外部消息
         MessageManager.Instance.RegisterMessage(MessageConst.Battle_TowerPlayDownOrUp, MessageTowerPlayDownOrUp);
+        MessageManager.Instance.RegisterMessage(MessageConst.Battle_Collision, MessageBattleCollision);
+        MessageManager.Instance.RegisterMessage(MessageConst.Battle_EnemyDie, MessageEnemyDie);
     }
 
 
@@ -51,10 +72,44 @@ public abstract class BattleBase
         entityManager.CreateTower(towerId, (towerBase) =>
         {
             TowerBase tower = (TowerBase)towerBase;
-            tower.SetEntityId(towerId);
             tower.EnterBattle(new Vector2(x * Define.CELL_SIZE, y * Define.CELL_SIZE));
         });
         entityManager.UpdateAllEnemyCellPaths();
+    }
+
+    private void MessageEnemyDie(MessageManager.Message m)
+    {
+        EntityManager.Instance.DestoryEnemy((int)m.ps[0]);
+    }
+    private void MessageBattleCollision(MessageManager.Message m)
+    {
+        EntityBase attackEntity = EntityManager.Instance.GetEntity(((SkillTrackEntity)EntityManager.Instance.GetEntity((int)m.ps[0])).GetOwerEntityMonoId());
+        EntityBase attackedEntity = EntityManager.Instance.GetEntity((int)m.ps[1]);
+
+        attackEntity.Attack(attackedEntity.GetEntityMonoId());
+        attackedEntity.Attacked(attackEntity.GetEntityMonoId());
+
+        //List<EntityBase> entitys = entityManager.GetEntitys();
+
+        //var config = GameApp.Instance.SkillConfig.GetSkillConfigData(skillConfig.SkillId).trackConfig;
+        //if (config.IsBreak) // 打到不是目标是敌人
+        //{
+        //    skillMachine.Enter(SKILLSTATE.End.ToString());
+        //    // TODO
+        //    Debug.Log("攻击");
+        //}
+        //else
+        //{
+        //    foreach (EnemyBase enemy in _enemys)
+        //    {
+        //        if (hitEntity == enemy)
+        //        {
+        //            skillMachine.Enter(SKILLSTATE.End.ToString());
+        //            // TODO
+        //            Debug.Log("攻击");
+        //        }
+        //    }
+        //}
     }
 
     public void StartBattle()
@@ -108,5 +163,10 @@ public abstract class BattleBase
     public BattleStatusType GetBattleStatus()
     {
         return _battleStatusType;
+    }
+
+    public Vector3 GetBattleRoot3DPosition()
+    {
+        return Battle3DRoot.transform.position;
     }
 }

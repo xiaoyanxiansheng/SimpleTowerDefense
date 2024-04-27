@@ -4,58 +4,42 @@ using UnityEngine;
 
 public class TowerBase : EntityBase
 {
+    protected int skillId;
+    protected int attckNum;
+    protected float attackInvertal;
+    protected float attackDistance;
+    
+    protected int buffId;
+    protected int buffLevel;
+
     public float doSkillPassTime = 0;
-    public TowerConfig.Skill skillConfig;
-    private List<EnemyBase> _enemys = new List<EnemyBase>();    // 搜索到的敌人
+    private List<int> _enemys = new List<int>();    // 搜索到的敌人
     // 索敌
 
     private StateMachine skillMachine;  // 防御塔只能触发一个技能(目前)
 
-    public TowerBase() : base() 
+    public virtual float GetDataAttackContinue()
     {
-        MessageManager.Instance.RegisterMessage(MessageConst.Battle_Collision, MessageBattleCollision);
-    }
-    public TowerBase(int instanceId, int entityId) : base(instanceId, entityId)
-    {
-        MessageManager.Instance.RegisterMessage(MessageConst.Battle_Collision, MessageBattleCollision);
+        return dataConfig.ps[4];
     }
 
-    private void MessageBattleCollision(MessageManager.Message m)
+    protected override void OnInitEntity()
     {
-        SkillTrackEntity skillEntity = (SkillTrackEntity)m.ps[0];
-        EntityBase hitEntity = (EntityBase)m.ps[1];
-        if ((TowerBase)(skillEntity.GetOwerEntity()) != this) return;
+        base.OnInitEntity();
 
-        var config = GameApp.Instance.SkillConfig.GetSkillConfigData(skillConfig.SkillId).trackConfig;
-        if (config.IsBreak) // 打到不是目标是敌人
-        {
-            skillMachine.Enter(SKILLSTATE.End.ToString());
-            // TODO
-            Debug.Log("攻击");
-        }
-        else
-        {
-            foreach (EnemyBase enemy in _enemys)
-            {
-                if (hitEntity == enemy)
-                {
-                    skillMachine.Enter(SKILLSTATE.End.ToString());
-                    // TODO
-                    Debug.Log("攻击");
-                }
-            }
-        }
-    }
+        // 数据解析 SkillID 索敌数量 攻击间隔 攻击距离 buffId buffLevel
+        skillId = (int)dataConfig.ps[0];
+        attckNum = (int)dataConfig.ps[1];
+        attackInvertal = dataConfig.ps[2];
+        attackDistance = dataConfig.ps[3];
 
-    public override void SetEntityId(int entityId)
-    {
-        base.SetEntityId(entityId);
-        skillConfig = GameApp.Instance.TowerConfig.GetTowerConfigData(entityId).skill;
+        buffId = (int)dataConfig.ps[4];
+        buffLevel = (int)dataConfig.ps[5];
     }
 
     private void InitSkillMachine()
     {
-        int levelId = skillConfig.SkillId;
+        int levelId = GetBuffSkillId();
         skillMachine = new StateMachine("DoSkill" + levelId.ToString());
         skillMachine.RegisterState(new SkillMachineStateReady(SKILLSTATE.Ready.ToString(), skillMachine));
         skillMachine.RegisterState(new SkillMachineStateTrack(SKILLSTATE.Track.ToString(), skillMachine));
@@ -63,11 +47,19 @@ public class TowerBase : EntityBase
         StateMachineManager.Instace.RegisterMachine(skillMachine);
     }
 
+    public override void Attack(int beAttackMonoId)
+    {
+        EntityBase entity = EntityManager.Instance.GetEntity(beAttackMonoId);
+        if (entity != null) entity.AddBuffer(buffId, buffLevel);
+    }
+
     public void EnterBattle(Vector2 pos)
     {
         InitSkillMachine();
 
         ShowSelf(pos);
+
+        base.EnterBattle();
     }
 
     protected override void OnUpdate(float delta)
@@ -75,31 +67,30 @@ public class TowerBase : EntityBase
         if (!skillMachine.IsFinish()) return;   // TODO 目前只能释放一次技能
 
         doSkillPassTime += delta;
-        if (doSkillPassTime < skillConfig.SkillInvertal) return;
+        if (doSkillPassTime < GetBuffAttackInverval()) return;
 
         // 已经超出攻击范围
         for (int i = _enemys.Count - 1; i >= 0; i--)
         {
-            if (Vector2.Distance(_enemys[i].GetPos(),GetPos()) > skillConfig.AttackDistance)
+            EntityBase entity = EntityManager.Instance.GetEntity(_enemys[i]);
+            if (entity != null)
             {
-                _enemys.RemoveAt(i);
+                if (Vector2.Distance(entity.GetPos(), GetPos()) > GetBuffAttackDistance())
+                {
+                    _enemys.RemoveAt(i);
+                }
             }
         }
 
-        int needSearchCount = Mathf.Max(0, skillConfig.AttackNum - _enemys.Count);
+        int needSearchCount = Mathf.Max(0, GetBuffAttackNum() - _enemys.Count);
         if(needSearchCount > 0)
         {
-            EntityManager.Instance.SearchClosestNEntity(ref _enemys, GetPos(), EntityManager.Instance.GetEnemies(), skillConfig.AttackDistance, needSearchCount);
+            EntityManager.Instance.SearchClosestNEntity(ref _enemys, GetPos(), EntityManager.Instance.GetEnemies(), GetBuffAttackDistance(), needSearchCount);
         }
 
         if (_enemys.Count == 0) return;
 
         DoSKill();
-    }
-
-    public void ExitBattle()
-    {
-        StateMachineManager.Instace.AddWaitDeleteMachine(skillMachine);
     }
 
     public void DoSKill()
@@ -112,9 +103,46 @@ public class TowerBase : EntityBase
         }
     }
 
-    public void DoSkill(EntityBase entity)
+    public void DoSkill(int entity)
     {
-        skillMachine.InitData(skillConfig.SkillId, this, entity);
+        skillMachine.InitData(GetBuffSkillId(), GetEntityMonoId(), entity);
         skillMachine.Enter(SKILLSTATE.Ready.ToString());
+    }
+
+    public override int GetBuffSkillId()
+    {
+        return skillId;
+    }
+    public override void SetBuffSkillId(int skillId)
+    {
+        this.skillId = skillId;
+    }
+
+    public override void SetBuffAttackNum(int num)
+    {
+        attckNum = num;
+    }
+
+    public override int GetBuffAttackNum()
+    {
+        return attckNum;
+    }
+
+    public override float GetBuffAttackDistance()
+    {
+        return attackDistance;
+    }
+    public override void SetBuffAttackDistance(float distance)
+    {
+        this.attackDistance = distance;
+    }
+
+    public override float GetBuffAttackInverval()
+    {
+        return attackInvertal;
+    }
+    public override void SetBuffAttackInverval(float invertal)
+    {
+        attackInvertal = invertal;
     }
 }

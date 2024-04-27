@@ -35,13 +35,14 @@ public class UIBattleMain : UIBaseView
 
     public override void OnShow(bool isBack = false)
     {
-        Debug.Log("OnShow");
+        //Debug.Log("OnShow");
     }
 
     private void ClickPlayDown()
     {
         Vector2 pos = Input.mousePosition;
         Vector2 offset = GetGameObject("BattleRoot").GetComponent<RectTransform>().anchoredPosition;
+        offset += UIManager.Instance.canvas.renderingDisplaySize * 0.5f;
         pos = pos - offset + Vector2.one * Define.CELL_SIZE * 0.5f;
         int2 cell = CommonUtil.VecConvertCell(pos);
         MessageManager.Instance.SendMessage(MessageConst.Battle_TowerPlayDownOrUp, cell.x, cell.y, true , 10001);
@@ -56,9 +57,9 @@ public class UIBattleMain : UIBaseView
     private void ClickBattleStart()
     {
         GetGameObject("StartButton").gameObject.SetActive(false);
-        LevelManager.Instance.CreateBattle(GetGameObject("BattleRoot"), 1001);
-        LevelManager.Instance.StartBattle();
+        //LevelManager.Instance.CreateBattle(GetGameObject("BattleRoot"), 1001);
+        //LevelManager.Instance.StartBattle();
 
-        _skillBtn.gameObject.SetActive(true);
+        //_skillBtn.gameObject.SetActive(true);
     }
 }

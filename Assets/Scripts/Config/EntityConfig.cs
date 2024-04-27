@@ -8,13 +8,14 @@ public class EntityConfigData
 {
     public string desc = "";
     public int EntityId = 0;
-    public GameObject prefab;
     public string prefabPath;
-    public int Health;
-    public float MoveSpeed;
-    public int SkillId;
-    public int SkillLevel; 
-    // Buff ап╠М
+    public DataConfig DataConfig;
+}
+
+[Serializable]
+public class DataConfig
+{
+    public List<float> ps;
 }
 
 [CreateAssetMenu(fileName = "EntityConfig" , menuName = "Config/EntityConfig" , order = 1)]

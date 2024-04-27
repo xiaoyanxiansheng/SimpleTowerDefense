@@ -8,7 +8,7 @@ public class SkillMachineStateEnd : MachineStateBase
 
     public override void OnEnter()
     {
-        Debug.Log("DoSkill SkillMachineStateEnd");
+        //Debug.Log("DoSkill SkillMachineStateEnd");
         stateMachine.Enter(SKILLSTATE.None.ToString());
     }
 }

@@ -3,13 +3,11 @@ using UnityEngine;
 public class GameApp : MonoBehaviour
 {
     [SerializeField]
-    public LevelConfig LevelConfig;
-    [SerializeField]
     public EntityConfig EntityConfig;
     [SerializeField]
-    public TowerConfig TowerConfig;
-    [SerializeField]
     public SkillConfig SkillConfig;
+    [SerializeField]
+    public BuffConfig BuffConfig;
 
     private static GameApp instance;
     public static GameApp Instance

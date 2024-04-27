@@ -16,10 +16,9 @@ public class LevelManager
     {
     }
 
-    public void CreateBattle(GameObject battleRoot,int battleId)
+    public void CreateBattle(GameObject battleRoot,BattleBase.InitData initData)
     {
-        BattleConfig battleConfig = GameApp.Instance.LevelConfig.GetBattleConfig(battleId);
-        battle = new CommonBattle(battleRoot, battleConfig);
+        battle = new CommonBattle(battleRoot, initData);
     }
 
     public void StartBattle(int levelId = 0)

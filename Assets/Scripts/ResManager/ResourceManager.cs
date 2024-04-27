@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public enum LoadGameObjectType
@@ -15,6 +16,8 @@ public class ResourceManager{
     {
         Instance = this;
     }
+
+    public static bool isBundleMode = false;
 
     public static bool isLog = false;
 
@@ -70,11 +73,23 @@ public class ResourceManager{
     /// <returns></returns>
     public static int CreateGameObjectAsync(LoadGameObjectType type,string assetName, GameObjectPool.OnCreateGameObject onCreateGameObject)
     {
-        int requestId = CreateAssetAsync(assetName,(Object tAsset ,int tRequestId)=> {
+        if (isBundleMode)
+        {
+            assetName = assetName.ToLower();
+            int requestId = CreateAssetAsync(assetName, (Object tAsset, int tRequestId) => {
+                int instanceId = GameObjectPool.AddGameObject(type, assetName, tAsset);
+                onCreateGameObject(instanceId, tRequestId);
+            });
+            return requestId;
+        }
+        else
+        {
+            assetName = "Assets/BuildResource/" + assetName + ".prefab";
+            Object tAsset = AssetDatabase.LoadAssetAtPath<Object>(assetName);
             int instanceId = GameObjectPool.AddGameObject(type, assetName, tAsset);
-            onCreateGameObject(instanceId, tRequestId);
-        });
-        return requestId;
+            onCreateGameObject(instanceId, 0);
+            return 0;
+        }
     }
     public static void CancelCreateGameObjectAsync(int requestId)
     {
