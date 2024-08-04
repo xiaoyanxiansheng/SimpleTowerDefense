@@ -50,3 +50,6 @@ ProjectSettings/AudioManager.asset
 ProjectSettings/PackageManagerSettings.asset
 ProjectSettings/Physics2DSettings.asset
 ProjectSettings/PresetManager.asset
+Temp/
+Assets/TextMesh Pro.meta
+Packages/packages-lock.json
