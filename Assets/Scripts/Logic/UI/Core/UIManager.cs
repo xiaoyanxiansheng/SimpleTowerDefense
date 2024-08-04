@@ -11,16 +11,26 @@ using UnityEngine;
 public class UIManager{
     public static UIManager Instance;
 
+    public GameObject UIRoot;
+
     public Canvas canvas;
 
     private List<UIBaseView> _uiViews = new List<UIBaseView>();
     private List<UIBaseCollect> _initViewCollects = new List<UIBaseCollect>();
     private List<UIBaseCollect> _openViewCollects = new List<UIBaseCollect>();
 
+    public static void Create()
+    {
+        if (Instance != null) return;
+
+        new UIManager();
+    }
+
     public UIManager()
     {
         Instance = this;
         canvas = GameObject.Find("UIRoot").GetComponent<Canvas>();
+        UIRoot = canvas.transform.Find("UI/Bottom").gameObject;
     }
 
     public void InitBase()
@@ -44,7 +54,7 @@ public class UIManager{
 
     private void OpenMainUI()
     {
-        Open(UIViewName.UIMain);
+        // Open(UIViewName.UIBigWorld);
     }
 
     #region 对外提供
@@ -75,10 +85,18 @@ public class UIManager{
             }
         }, views);
     }
-    
+
     // 打开UI或者UI集合 
     // 1 当前UI含主UI 关闭上一个UI集合再打开当前
     // 2 当前UI不含主UI 直接打开UI
+    public void Open(object p, params string[] uiNames)
+    {
+        Open(new List<object>() { p }, uiNames);
+    }
+    public void Open(object p1, object p2, params string[] uiNames)
+    {
+        Open(new List<object>() { p1,p2 }, uiNames);
+    }
     public void Open(List<object> ps, params string[] uiNames)
     {
         Init(ps, (UIBaseCollect viewCollect) =>

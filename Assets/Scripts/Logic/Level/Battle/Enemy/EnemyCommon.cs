@@ -29,7 +29,7 @@ public class EnemyCommon : EnemyBase
     {
         base.EnterBattle(startPos, endPos);
         PreEnterBattle(startPos);
-        movePathComponent.SetSpeed(GetBuffMoveSpeed());
+        movePathComponent.SetSpeed(GetMoveSpeed());
         movePathComponent.Move(CalMovePosPaths(ref movePosPaths, startPos, endPos));
     }
 
@@ -50,7 +50,7 @@ public class EnemyCommon : EnemyBase
     protected virtual List<Vector2> CalMovePosPaths(ref List<Vector2> movePosPaths, Vector2 startPos, Vector2 endPos)
     {
         movePosPaths.Clear();
-        LevelManager.Instance.battle.GetBattleCellManager().GetMovePosPaths(ref movePosPaths, startPos, endPos);
+        BigWorldManager.Instance.Battle.GetBattleCellManager().GetMovePosPaths(ref movePosPaths, startPos, endPos);
         return movePosPaths;
     }
 
@@ -64,6 +64,7 @@ public class EnemyCommon : EnemyBase
 
     protected virtual void MoveFinishCall(int type)
     {
+        MessageManager.Instance.SendMessage(MessageConst.Battle_EnemyExit, GetEntityMonoId(), type);
     }
 
     protected virtual void MoveCellFinishCall()
@@ -78,11 +79,5 @@ public class EnemyCommon : EnemyBase
     public EntityPathMoveComponent GetMoveComponent()
     {
         return movePathComponent;
-    }
-
-    public override void SetBuffMoveSpeed(float speed)
-    {
-        base.SetBuffMoveSpeed(speed);
-        movePathComponent.SetSpeed(speed);
     }
 }

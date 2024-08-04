@@ -17,6 +17,7 @@ public class CellData
     public CellType CellType;
     public int X, Y;
     public int MoveWeight;
+    public List<int> entitys = new List<int>();
     public CellData(int x, int y, CellType cellType, int weight)
     {
         defaultCellType = cellType;X = x; Y = y;CellType = cellType; MoveWeight = weight;
@@ -26,41 +27,38 @@ public class CellData
 public class BattleCellData
 {
     private bool _isFixcanWalkPoints;
-    private List<int2> _canWalkPoints;
-    private List<int2> _canPlacePoints;
+    private List<int2> _canWalkPoints = new List<int2>();
+    private List<int2> _canPlacePoints = new List<int2>();
     private BattleBase _battle;
     private Dictionary<int, Dictionary<int, CellData>> _cellDataMap = new Dictionary<int, Dictionary<int, CellData>>();
 
     private EntityAStarPath _entityAStarPath;
 
-    public BattleCellData(bool isFixcanWalkPoints, List<int2> canWalkPoints , List<int2> canPlacePoints) 
+    public BattleCellData() 
     {
-        _isFixcanWalkPoints = isFixcanWalkPoints;
-        _canWalkPoints = canWalkPoints;
-        _canPlacePoints = canPlacePoints;
         _entityAStarPath = new EntityAStarPath();
-        Init();
     }
 
-    private void Init()
+    public void AddCell(bool isFixcanWalkPoints, List<int2> canWalkPoints, List<int2> canPlacePoints)
+    {
+        _isFixcanWalkPoints = isFixcanWalkPoints;
+        _canWalkPoints.AddRange(canWalkPoints);
+        _canPlacePoints.AddRange(canPlacePoints);
+        StartBattle();
+    }
+
+    public void StartBattle()
     {
         _cellDataMap.Clear();
-        for(int i = 0; i< Define.CELL_COUNT_WIDTH; i++)
-        {
-            if (!_cellDataMap.ContainsKey(i))
-            {
-                _cellDataMap[i] = new Dictionary<int, CellData>();
-            }
-            for (int j = 0; j < Define.CELL_COUNT_HEIGHT; j++)
-            {
-                _cellDataMap[i][j] = new CellData(i, j, CellType.None, 0);
-                _cellDataMap[i][j].CellType = CellType.None;
-            }
-        }
 
         for(int i = 0; i< _canWalkPoints.Count; i++)
         {
             int2 p = _canWalkPoints[i];
+            if (!_cellDataMap.ContainsKey(p.x))
+            {
+                _cellDataMap[p.x] = new Dictionary<int, CellData>();
+            }
+            _cellDataMap[p.x][p.y] = new CellData(p.x, p.y, CellType.None, 0);
             _cellDataMap[p.x][p.y].CellType = CellType.Move;            // 可移动
             _cellDataMap[p.x][p.y].defaultCellType = CellType.Move;
             _cellDataMap[p.x][p.y].MoveWeight = 100;
@@ -83,10 +81,59 @@ public class BattleCellData
         }
     }
 
-    public void UpdateWeight(int x, int y, bool isPlace)
+    public void ExitBattle()
     {
+        _cellDataMap.Clear();
+        _canWalkPoints.Clear();
+        _canPlacePoints.Clear();
+    }
+
+    public bool CanPlace(int2 point)
+    {
+        if (point.x >= Define.CELL_COUNT_WIDTH || point.y >= Define.CELL_COUNT_HEIGHT) return false;
+        if(point.x < 0 || point.y < 0) return false;
+        CellData d = _cellDataMap[point.x][point.y];
+        return d.CellType == CellType.Place || d.CellType == CellType.Normal; 
+    }
+
+    public void UpdateWeight(int entityId ,int x, int y, bool isPlace , CellType cellType = CellType.None)
+    {
+        if (!_cellDataMap.ContainsKey(x) || !_cellDataMap[x].ContainsKey(y)) return;
+
         CellType t = _cellDataMap[x][y].CellType;
-        _cellDataMap[x][y].CellType = isPlace ? CellType.None : _cellDataMap[x][y].defaultCellType;
+        _cellDataMap[x][y].CellType = isPlace ? cellType : _cellDataMap[x][y].defaultCellType;
+        if(isPlace)
+        {
+            if (!_cellDataMap[x][y].entitys.Contains(entityId))
+            {
+                _cellDataMap[x][y].entitys.Add(entityId);
+            }
+        }
+        else
+        {
+            _cellDataMap[x][y].entitys.Remove(entityId);
+        }
+    }
+
+    public List<int> GetEntitys(int x , int y)
+    {
+        if (_cellDataMap.ContainsKey(x) && _cellDataMap[x].ContainsKey(y)) return _cellDataMap[x][y].entitys;
+        return null;
+    }
+
+    public int GetTowerCusion(int x , int y)
+    {
+        List<int> entitys = GetEntitys(x , y);
+        if (entitys == null || entitys.Count == 0) return 0;
+
+        foreach(int entityId in entitys)
+        {
+            if(entityId / 10000 == 6)   // 目前暂定 6 为塔基
+            {
+                return entityId;
+            }
+        }
+        return 0;
     }
 
     public void GetMovePointPaths(ref List<int2> pathPoints ,int2 start , int2 end)

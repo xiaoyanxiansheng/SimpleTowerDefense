@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7525510868778550326}
   - component: {fileID: 7525510868778550346}
-  - component: {fileID: 7525510868778550347}
   - component: {fileID: 7150199199323423140}
   - component: {fileID: -7153662560156936171}
+  - component: {fileID: 69490678277255280}
+  - component: {fileID: 3896865159913149855}
   m_Layer: 6
   m_Name: Enemy01
   m_TagString: Untagged
@@ -48,36 +49,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7525510868778550327}
   m_CullTransparentMesh: 1
---- !u!114 &7525510868778550347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7525510868778550327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9484e79033c7f0a438851844c6adb324, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!61 &7150199199323423140
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -116,6 +87,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e695d046597c74343960e6c41dfd8540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityMonoId: 0
+  animationSpeed: 1
   animationCurve:
     serializedVersion: 2
     m_Curve:
@@ -140,3 +113,69 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &69490678277255280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7525510868778550327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3896865159913149855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7525510868778550327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9022ec3e96eb44b47bab80d18909efcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  items:
+  - it: 2
+    images:
+    - {fileID: 21300000, guid: 2874db35e804e1448a58616e120b206e, type: 3}
+    - {fileID: 21300000, guid: 2874db35e804e1448a58616e120b206e, type: 3}
+    - {fileID: 21300000, guid: e7eaad7ac3c76df4aaf1d37c322bb16e, type: 3}
+    - {fileID: 21300000, guid: 225131ce35cef1149bd2860701d30c3a, type: 3}
+    - {fileID: 21300000, guid: 31fea9a97ee75964ea04c70e033a471b, type: 3}
+    - {fileID: 21300000, guid: 6b5440b8dbe76674a8b3d7da69aece74, type: 3}
+    - {fileID: 21300000, guid: 60bcdc133da2c4c4fb334b6b9ccc1d2a, type: 3}
+    - {fileID: 21300000, guid: 8ad688a575263d94d8e0cf1bedffed96, type: 3}
+    - {fileID: 21300000, guid: 1ae538e66632c304882ce0dec8e808cc, type: 3}
+    - {fileID: 21300000, guid: 937a4ed85d9e62f45a8779685bc531b6, type: 3}
+    - {fileID: 21300000, guid: 7436bbee9fe903743b0f603bf96a90e3, type: 3}
+    - {fileID: 21300000, guid: b6a8a9850a3dbd14387ecabb58a97804, type: 3}
+    - {fileID: 21300000, guid: 5adfe929b2304314d8a50f05c4d436bc, type: 3}
+    - {fileID: 21300000, guid: 78a9583436d34d949a0aeb896036fa66, type: 3}
+    - {fileID: 21300000, guid: 3da1c59d233471c43b0f95e5b0998d23, type: 3}
+    - {fileID: 21300000, guid: 4324bffbea0cafa4bbf7c0c7a1d4757a, type: 3}
+    - {fileID: 21300000, guid: c3b337032248d384296acf6d4f34ec93, type: 3}
+    - {fileID: 21300000, guid: 278286756ee905241bee5ae937b19ebb, type: 3}
+    - {fileID: 21300000, guid: e1450cfda6f9cee4fb1d3ba17de240f0, type: 3}
+    - {fileID: 21300000, guid: e90f235fd53c91e41a38350eceb82bb8, type: 3}
+    - {fileID: 21300000, guid: bedddb7a8a1df6146b8e0659d67fe68e, type: 3}

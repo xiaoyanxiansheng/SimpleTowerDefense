@@ -9,6 +9,7 @@ public class BuffConfig : ScriptableObject
     public class Buff
     {
         public int buffId;
+        public BuffReplaceType replaceType;
         public BuffType type;
         public List<float> ps;
     }

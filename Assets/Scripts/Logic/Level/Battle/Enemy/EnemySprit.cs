@@ -24,7 +24,7 @@ public class EnemySprit : EnemyCommon
         }
         else
         {
-            movePathComponent.SetSpeed(GetBuffMoveSpeed());
+            movePathComponent.SetSpeed(GetMoveSpeed());
         }
         
     }

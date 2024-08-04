@@ -4,12 +4,17 @@ using UnityEngine;
 public class SkillTrackEntity : EntityBase
 {
     private int _owerEntityMonoId;
-
-    //public SkillTrackEntity() : base() { }
+    private int _beAttackEntityMonoId;
 
     public void SetOwerEntity(int owerEntityMonoId)
     {
         this._owerEntityMonoId = owerEntityMonoId;
+    }
+
+    public void SetBeAttackEntity(int beAttackMonoId)
+    {
+        this._beAttackEntityMonoId = beAttackMonoId;
+        GetGameObject().GetComponent<EntityBehaviour>().entityBeAttackMonoId = beAttackMonoId;
     }
 
     public int GetOwerEntityMonoId()

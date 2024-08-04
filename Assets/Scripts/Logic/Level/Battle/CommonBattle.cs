@@ -9,7 +9,7 @@ public class CommonBattle : BattleBase
 
     public override bool Update(float delta)
     {
-        return true;
+        return false;
     }
 
     /*

@@ -24,5 +24,18 @@ public class LevelManager
     public void StartBattle(int levelId = 0)
     {
         battle.StartBattle();
+
+        MessageManager.Instance.SendMessage(MessageConst.Battle_BattleStart);
+    }
+
+    public void ExitBattle()
+    {
+        MessageManager.Instance.SendMessage(MessageConst.Battle_BattleExit);
+
+        if(battle != null)
+        {
+            battle.ExitBattle();
+            battle = null;
+        }
     }
 }

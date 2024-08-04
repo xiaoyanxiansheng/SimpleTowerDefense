@@ -1,4 +1,4 @@
-public class TowerCommon : TowerBase
+public class TowerCommon : Tower
 {
 
 }

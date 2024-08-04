@@ -5,9 +5,9 @@
         2 ComponentBase
  */
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static MessageManager;
 
 public abstract class EntityBase : BuffInterce
 {
@@ -19,7 +19,11 @@ public abstract class EntityBase : BuffInterce
     protected int entityInstanceId;     // InstanceId
     protected DataConfig dataConfig;
 
+    protected FrameAnimation animation; // 动画系统
+
     private List<EntityComponentBase> _entityComponentBases = new List<EntityComponentBase>();
+
+    private List<MessageManager.Message> registerMessages = new List<MessageManager.Message>();	// 注册的消息
 
     public EntityBase() 
     {
@@ -36,7 +40,8 @@ public abstract class EntityBase : BuffInterce
     public void InitEntityInstance(int instanceId)
     {
         this.entityInstanceId = instanceId;
-        ExitBattle();
+        animation = GetGameObject().GetComponent<FrameAnimation>();
+        if (animation) PlayAnimation(FrameAnimation.FrameAnimationType.Idle);
         OnInitEntityInstance();
     }
 
@@ -67,19 +72,6 @@ public abstract class EntityBase : BuffInterce
 
     }
 
-    public void AddBuffer(int buffId , int buffLevel)
-    {
-        BuffConfig.Buff buff = GameApp.Instance.BuffConfig.GetBuffConfig(buffId);
-        if(buff.type == BuffType.Health)
-        {
-            AddComponent(new HealthBuff(this, buff, buffLevel));
-        }
-        else if(buff.type == BuffType.Speed) 
-        {
-            AddComponent(new SpeedBuff(this, buff, buffLevel));
-        }
-    }
-
     public void AddComponent(EntityComponentBase entityComponent)
     {
         _entityComponentBases.Add(entityComponent);
@@ -104,8 +96,36 @@ public abstract class EntityBase : BuffInterce
 
     protected virtual void OnUpdate(float delta) { }
 
-    public virtual void Attack(int beAttackMonoId) { }
-    public virtual void Attacked(int attackMonoId) { }
+    public virtual void Attack(int beAttackMonoId) 
+    {
+        //GameObject obj = GetGameObject();
+        //FrameAnimation frameAnimation = obj.GetComponent<FrameAnimation>();
+        //if (frameAnimation)
+        //{
+        //    frameAnimation.Play(FrameAnimation.FrameAnimationType.Attack);
+        //}
+    }
+
+    public virtual void Attacked(int attackMonoId) 
+    {
+        PlayAnimation(FrameAnimation.FrameAnimationType.BeAttack);
+    }
+
+    public void PlayAnimation(FrameAnimation.FrameAnimationType it)
+    {
+        if (animation)
+        {
+            animation.Play(it, () =>
+            {
+                animation.Play(FrameAnimation.FrameAnimationType.Idle, null, true);
+            });
+        }
+    }
+
+    public FrameAnimation.FrameAnimationType GetAnimationState()
+    {
+        return animation.curAnimationState;
+    }
 
     public int GetEntityInstanceId()
     {
@@ -151,9 +171,7 @@ public abstract class EntityBase : BuffInterce
 
     public Vector3 GetPosWS()
     {
-        Vector3 vws = GetGameObject().transform.position;
-        vws.z = 50;
-        return vws;
+        return GetGameObject().transform.position;
     }
 
     public Vector2 SetPos(Vector2 pos)
@@ -200,20 +218,21 @@ public abstract class EntityBase : BuffInterce
     public void SetParent(GameObject parent)
     {
         GetGameObject().transform.SetParent(parent.transform);
+        CommonUtil.TrimGameObejct(GetGameObject());
     }
 
     public Vector3 TransformPoint(Vector3 vec)
     {
-        Vector3 vws = LevelManager.Instance.battle.Battle3DRoot.transform.TransformPoint(vec);
+        Vector3 vws = BigWorldManager.Instance.Battle.Battle3DRoot.transform.TransformPoint(vec);
         vws.z = 50;
         return vws;
     }
 
-    public void EnterBattle()
+    public virtual void EnterBattle()
     {
         _isEnterBattle = true;
         var collision = GetGameObject().transform.GetComponent<BoxCollider2D>();
-        if (collision != null) collision.enabled = _isEnterBattle;
+        if (collision != null) collision.enabled = true;
 
         OnEnterBattle();
     }
@@ -221,9 +240,7 @@ public abstract class EntityBase : BuffInterce
     public virtual void ExitBattle()
     {
         _isEnterBattle = false;
-        var collision = GetGameObject().transform.GetComponent<BoxCollider2D>();
-        if (collision != null) collision.enabled = _isEnterBattle;
-
+        RemoveRegisterMesssge();
         OnExitBattle();
     }
 
@@ -233,5 +250,31 @@ public abstract class EntityBase : BuffInterce
     public bool IsEnterBattle()
     {
         return _isEnterBattle;
+    }
+
+    protected void RegisterMessage(string msgName, MessageDelegate messageCall)
+    {
+        for (int i = 0; i < registerMessages.Count; i++)
+        {
+            MessageManager.Message m = registerMessages[i];
+            if (m.name == msgName && m.messageCall == messageCall)
+            {
+                return;
+            }
+        }
+
+        MessageManager.Message nm = MessageManager.Instance.BeginMessage(msgName);
+        nm.messageCall = messageCall;
+        MessageManager.Instance.RegisterMessage(nm);
+        registerMessages.Add(nm);
+    }
+
+    private void RemoveRegisterMesssge()
+    {
+        for (int i = 0; i < registerMessages.Count; i++)
+        {
+            MessageManager.Instance.RemoveMessage(registerMessages[i]);
+        }
+        registerMessages.Clear();
     }
 }

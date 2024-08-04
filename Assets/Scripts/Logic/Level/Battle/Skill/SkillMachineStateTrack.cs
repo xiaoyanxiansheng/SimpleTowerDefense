@@ -34,6 +34,7 @@ public class SkillMachineStateTrack : MachineStateBase
                 Vector2 endPos = beAttacker.GetPos();
                 _skill = (SkillTrackEntity)entity;
                 _skill.SetOwerEntity(_attackerMonoId);
+                _skill.SetBeAttackEntity(_beAttackerMonoId);
                 _skill.SetRotationZ(attack.GetRotation().z);
                 _skill.EnterBattle(startPos);
             }
@@ -42,7 +43,11 @@ public class SkillMachineStateTrack : MachineStateBase
 
     public override void OnExit()
     {
-        ResourceManager.DestoryGameObject(_skill.GetEntityInstanceId());
+        if(_skill != null)
+        {
+            EntityManager.Instance.DestoryEntity(_skill.GetEntityMonoId());
+        }
+        
         isReady = false;
     }
 
@@ -85,7 +90,7 @@ public class SkillMachineStateTrack : MachineStateBase
             // 跟随性 并且没有速度
             if(_config.translationConfig.mulSpeed == 0)
             {
-                if(Vector2.Distance(attacker.GetPos(),beAttacker.GetPos()) > ((TowerBase)attacker).GetBuffAttackDistance())
+                if(Vector2.Distance(attacker.GetPos(),beAttacker.GetPos()) > ((Tower)attacker).GetAttackDistance())
                 {
                     LoopOrFinish();
                 }
@@ -141,7 +146,7 @@ public class SkillMachineStateTrack : MachineStateBase
 
         if (_config.IsLoop)
         {
-            EntityBase entity = EntityManager.Instance.SearchOneEntity(attack.GetPos(), ((TowerBase)attack).GetBuffAttackDistance());
+            EntityBase entity = EntityManager.Instance.SearchOneEntity(attack.GetPos(), ((Tower)attack).GetAttackDistance());
             if (entity == null)
             {
                 OnSkillFinishCall();

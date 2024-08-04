@@ -14,12 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buffs:
   - buffId: 10001
+    replaceType: 0
     type: 0
     ps:
     - -30
     - 0
     - 0
   - buffId: 10002
+    replaceType: 0
+    type: 1
+    ps:
+    - -100
+    - 3
+  - buffId: 10003
+    replaceType: 2
+    type: 2
+    ps:
+    - -100
+  - buffId: 10002
+    replaceType: 0
     type: 1
     ps:
     - -100

@@ -42,7 +42,7 @@ public class EnemySnakeCommon : EnemyCommon
         base.OnInitEntityInstance();
 
         _lineRender = GetGameObject("root").GetComponent<LineRenderer>();
-        Vector3 defaultPosition = LevelManager.Instance.battle.GetBattleRoot3DPosition();
+        Vector3 defaultPosition = BigWorldManager.Instance.Battle.GetBattleRoot3DPosition();
 
         // 初始化身体
         snakeCommonBodies.Clear();

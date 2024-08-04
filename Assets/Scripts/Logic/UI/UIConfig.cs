@@ -46,20 +46,27 @@ public static class UIConfig
 
     private static UIPrefabScript[] _uiPrefabScripts = new UIPrefabScript[]
     {
-        new UIPrefabScript(new UIMain(UIViewName.UIMain),UIType.AutoMain),
+        new UIPrefabScript(new UIBigWorld(UIViewName.UIBigWorld),UIType.AutoMain),
+        new UIPrefabScript(new UIBigWorldInterAction(UIViewName.UIBigWorldInterAction),UIType.Main),
+
         new UIPrefabScript(new UIBattleMain(UIViewName.UIBattleMain),UIType.AutoMain),
         new UIPrefabScript(new UIBattleCommon(UIViewName.UIBattleCommon),UIType.AutoMain),
-        new UIPrefabScript(new UIChapterMain(UIViewName.UIChapterMain),UIType.AutoMain)
+        new UIPrefabScript(new UIChapterMain(UIViewName.UIChapterMain),UIType.AutoMain),
+        new UIPrefabScript(new UIBattleInterAction(UIViewName.UIBattleInterAction),UIType.Son),
+        new UIPrefabScript(new UIBattleTower(UIViewName.UIBattleTower),UIType.Son)
     };
 
 }
 
 public static class UIViewName
 {
-    public static string UIMain = "Prefab/UI/Main/UIMain";
+    public static string UIBigWorld = "Prefab/UI/BigWorld/UIBigWorld";
+    public static string UIBigWorldInterAction = "Prefab/UI/BigWorld/UIBigWorldInterAction";
 
     public static string UIBattleMain = "Prefab/UI/Battle/UIBattleMain";
     public static string UIBattleCommon = "Prefab/UI/Battle/UIBattleCommon";
+    public static string UIBattleInterAction = "Prefab/UI/Battle/UIBattleInterAction";
+    public static string UIBattleTower = "Prefab/UI/Battle/UIBattleTower";
 
     public static string UIChapterMain = "Prefab/UI/Level/Chapter001/Chapter";
 }

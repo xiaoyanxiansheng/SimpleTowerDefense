@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 using static BattleBase;
+using static BuffSystem;
 
 /*
     BattleBase 的管理责任
@@ -32,12 +33,11 @@ public abstract class BattleBase
         public List<LevelEnemyData> enemys;
     }
 
-    private InitData _initData;
-
     private BattleStatusType _battleStatusType = BattleStatusType.None;
     private float _battleContinueTime = 0;
     private int _timerId;
     public EntityManager entityManager;
+    public BuffSystem buffSystem;
     public BattleCellData battleCellManager;
     public StateMachineManager stateMachineManager;
     public SkillManager skillManager;
@@ -47,17 +47,27 @@ public abstract class BattleBase
     public BattleBase(GameObject battleRoot, InitData initData)
     {
         BattleRoot = battleRoot;
-        _initData = initData;
-        Battle3DRoot = battleRoot.transform.Find("3DRoot").gameObject;
-        entityManager = new EntityManager(initData.enemys);
-        battleCellManager = new BattleCellData(initData.isFixPaths, initData.canWalkPoints,initData.canPlacePoints);
+
+        entityManager = new EntityManager();
+        battleCellManager = new BattleCellData();
         stateMachineManager = new StateMachineManager();
         skillManager = new SkillManager();
+        buffSystem = new BuffSystem();
 
         // 注册外部消息
-        MessageManager.Instance.RegisterMessage(MessageConst.Battle_TowerPlayDownOrUp, MessageTowerPlayDownOrUp);
+        MessageManager.Instance.RegisterMessage(MessageConst.Battle_UI_TowerPlayDownOrUp, MessageTowerPlayDownOrUp);
+        MessageManager.Instance.RegisterMessage(MessageConst.Battle_UI_CusionPlayDownOrUp, MessageCusionPlayDownOrUp);
         MessageManager.Instance.RegisterMessage(MessageConst.Battle_Collision, MessageBattleCollision);
         MessageManager.Instance.RegisterMessage(MessageConst.Battle_EnemyDie, MessageEnemyDie);
+        MessageManager.Instance.RegisterMessage(MessageConst.Battle_EnemyExit, MessageEnemyExit);
+
+        AddData(initData);
+    }
+
+    public void AddData(InitData initData)
+    {
+        entityManager.AddEnemys(initData.enemys);
+        battleCellManager.AddCell(initData.isFixPaths, initData.canWalkPoints, initData.canPlacePoints);
     }
 
 
@@ -67,13 +77,29 @@ public abstract class BattleBase
         int y = (int)m.ps[1];
         bool play = (bool)m.ps[2];
         int towerId = (int)m.ps[3];
-
-        battleCellManager.UpdateWeight(x, y, play);
         entityManager.CreateTower(towerId, (towerBase) =>
         {
-            TowerBase tower = (TowerBase)towerBase;
+            Tower tower = (Tower)towerBase;
             tower.EnterBattle(new Vector2(x * Define.CELL_SIZE, y * Define.CELL_SIZE));
+            AddCellBuff(x, y, towerId);
         });
+        battleCellManager.UpdateWeight(towerId,x, y, play);
+        entityManager.UpdateAllEnemyCellPaths();
+    }
+
+    private void MessageCusionPlayDownOrUp(MessageManager.Message m)
+    {
+        int x = (int)m.ps[0];
+        int y = (int)m.ps[1];
+        bool play = (bool)m.ps[2];
+        int towerCusionId = (int)m.ps[3];
+        entityManager.CreateTowerCusion(towerCusionId, (towerBase) =>
+        {
+            TowerCusion towerCusion = (TowerCusion)towerBase;
+            towerCusion.EnterBattle(new Vector2(x * Define.CELL_SIZE, y * Define.CELL_SIZE));
+            AddCellBuff(x, y, towerCusionId);
+        });
+        battleCellManager.UpdateWeight(towerCusionId, x, y, play, CellType.Place);
         entityManager.UpdateAllEnemyCellPaths();
     }
 
@@ -81,6 +107,12 @@ public abstract class BattleBase
     {
         EntityManager.Instance.DestoryEnemy((int)m.ps[0]);
     }
+
+    private void MessageEnemyExit(MessageManager.Message m)
+    {
+        EntityManager.Instance.DestoryEnemy((int)m.ps[0]);
+    }
+    
     private void MessageBattleCollision(MessageManager.Message m)
     {
         EntityBase attackEntity = EntityManager.Instance.GetEntity(((SkillTrackEntity)EntityManager.Instance.GetEntity((int)m.ps[0])).GetOwerEntityMonoId());
@@ -118,10 +150,11 @@ public abstract class BattleBase
 
         // 战斗计时器 启动
         MessageManager.Instance.SendMessage(MessageConst.Battle_BattleStart);
-        
-        Timer.Instance.AddTimer(0.001f, BaseUpdate);
+
+        _timerId = Timer.Instance.AddTimer(0.001f, BaseUpdate);
 
         // 敌人入场
+        battleCellManager.StartBattle();
         entityManager.StartBattle();
     }
 
@@ -132,18 +165,21 @@ public abstract class BattleBase
 
         entityManager.Update(delta, _battleContinueTime);
         stateMachineManager.Update(delta);
+        buffSystem.Update(delta);
 
         return Update(delta);
     }
 
-    public void EndBattle()
+    public void ExitBattle()
     {
         _battleStatusType = BattleStatusType.EndBattle;
 
         Timer.Instance.RemoveTimer(_timerId);
+        MessageManager.Instance.RemoveMessage(MessageConst.Battle_UI_TowerPlayDownOrUp, MessageTowerPlayDownOrUp);
+        MessageManager.Instance.RemoveMessage(MessageConst.Battle_Collision, MessageBattleCollision);
+        MessageManager.Instance.RemoveMessage(MessageConst.Battle_EnemyDie, MessageEnemyDie);
 
-        // TODO 需要区分成功还是失败
-        MessageManager.Instance.SendMessage(MessageConst.Battle_BattleSuccess);
+        EntityManager.Instance.ExitBattle();
     }
 
     public void PauseBattle()
@@ -168,5 +204,22 @@ public abstract class BattleBase
     public Vector3 GetBattleRoot3DPosition()
     {
         return Battle3DRoot.transform.position;
+    }
+
+    // 给某个位置上的Tower增加Buff
+    private void AddCellBuff(int x , int y , int entityId)
+    {
+        int towerCusionId = battleCellManager.GetTowerCusion(x, y);
+        if (towerCusionId == 0) return;
+
+        EntityBase entity = EntityManager.Instance.GetEntity(towerCusionId);
+        if (entity != null)
+        {
+            TowerCusion cusion = (TowerCusion)entity;
+            foreach (int buffId in cusion.GetBuffs())
+            {
+                BuffSystem.Instance.AddBuff(entityId, entityId, buffId, 1);  // TODO
+            }
+        }
     }
 }

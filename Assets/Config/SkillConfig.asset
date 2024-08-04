@@ -22,7 +22,7 @@ MonoBehaviour:
     trackConfig:
       IsLoop: 0
       IsBreak: 0
-      ShapeAssetPath: Prefab/Battle/Skill/Skill10001
+      ShapeAssetPath: Prefab/Battle/Skill/Skill10001/Skill10001
       isUseTranslation: 1
       translationConfig:
         mulSpeed: 2

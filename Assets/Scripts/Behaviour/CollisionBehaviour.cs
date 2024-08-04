@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[ExecuteAlways]
 public class CollisionBehaviour : MonoBehaviour
 {
     // 当其他游戏对象开始与这个游戏对象的EdgeCollider2D碰撞时调用
@@ -8,7 +7,14 @@ public class CollisionBehaviour : MonoBehaviour
     {
         if (collision == null) return;
 
-        MessageManager.Instance.SendMessage(MessageConst.Battle_Collision,GetComponent<EntityBehaviour>().entityMonoId, collision.GetComponent<EntityBehaviour>().entityMonoId);
+        int entityAttackMonoId = GetComponent<EntityBehaviour>().entityAttackMonoId;
+        int entityBeAttackMonoId = GetComponent<EntityBehaviour>().entityBeAttackMonoId;
+        int collisionEntityAttackMonoId = collision.GetComponent<EntityBehaviour>().entityAttackMonoId;
+
+        if (entityBeAttackMonoId == -1 || entityBeAttackMonoId == collisionEntityAttackMonoId)
+        {
+            MessageManager.Instance.SendMessage(MessageConst.Battle_Collision, entityAttackMonoId, collisionEntityAttackMonoId);
+        }
     }
 
     // 当其他游戏对象停止与这个游戏对象的EdgeCollider2D碰撞时调用

@@ -15,6 +15,7 @@ public class ResourceManager{
     public ResourceManager()
     {
         Instance = this;
+        Init();
     }
 
     public static bool isBundleMode = false;
@@ -24,6 +25,13 @@ public class ResourceManager{
     public static string bundleRootPath = Application.dataPath + "/AssetBundles/";
 
 	public static int requestId = 0;
+
+    public static void Create()
+    {
+        if (Instance != null) return;
+
+        new ResourceManager();
+    }
 
     /// <summary>
     /// 请求Id 每次自增
@@ -84,6 +92,7 @@ public class ResourceManager{
         }
         else
         {
+            assetName = assetName.Replace("Assets/BuildResource/", "").Replace(".prefab", "");
             assetName = "Assets/BuildResource/" + assetName + ".prefab";
             Object tAsset = AssetDatabase.LoadAssetAtPath<Object>(assetName);
             int instanceId = GameObjectPool.AddGameObject(type, assetName, tAsset);

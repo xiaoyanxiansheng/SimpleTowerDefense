@@ -1,10 +1,10 @@
+
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class UIBattleMain : UIBaseView
 {
-    private Button _skillBtn;
 
     public UIBattleMain(string name) : base(name)
     {
@@ -12,54 +12,54 @@ public class UIBattleMain : UIBaseView
 
     public override void OnClose()
     {
-        Debug.Log("OnClose");
+        //throw new System.NotImplementedException();
     }
 
     public override void OnCreate()
     {
-        _skillBtn = GetGameObject("SkillButton").GetComponent<Button>();
-        _skillBtn.gameObject.SetActive(false);
+        //throw new System.NotImplementedException();
     }
 
     public override void OnDestory()
     {
-        Debug.Log("OnDestory");
-    }
-
-    public override void OnRegisterMessage()
-    {
-        RegisterButtonClick("StartButton", ClickBattleStart);
-        RegisterButtonClick(_skillBtn, ClickSkill);
-        RegisterButtonClick("BattleEventRoot/EventScreen", ClickPlayDown);
+        //throw new System.NotImplementedException();
     }
 
     public override void OnShow(bool isBack = false)
     {
-        //Debug.Log("OnShow");
+        //throw new System.NotImplementedException();
+    }
+
+    public override void OnRegisterMessage()
+    {
+        RegisterButtonClick("ExitBtn", ClickExitBattle);
+        RegisterButtonClick("PlayTownBtn", ClickPlayTownBtn);
+        //RegisterButtonClick("EventScreen", ClickPlayDown);
+    }
+
+    private void ClickExitBattle()
+    {
+        BigWorldManager.Instance.ExitBattle();
+        OnBack();
+    }
+
+    private void ClickPlayTownBtn()
+    {
+        Vector3 position = -Player.Instance.GetPosition();
+        int2 cell = CommonUtil.VecConvertCell(position);
+        MessageManager.Instance.SendMessage(MessageConst.Battle_UI_TowerPlayDownOrUp, cell.x, cell.y, true, 10001);
     }
 
     private void ClickPlayDown()
     {
         Vector2 pos = Input.mousePosition;
-        Vector2 offset = GetGameObject("BattleRoot").GetComponent<RectTransform>().anchoredPosition;
+        Vector2 offset = GetGameObject().GetComponent<RectTransform>().anchoredPosition;
         offset += UIManager.Instance.canvas.renderingDisplaySize * 0.5f;
         pos = pos - offset + Vector2.one * Define.CELL_SIZE * 0.5f;
-        int2 cell = CommonUtil.VecConvertCell(pos);
-        MessageManager.Instance.SendMessage(MessageConst.Battle_TowerPlayDownOrUp, cell.x, cell.y, true , 10001);
-    }
 
-    private void ClickSkill()
-    {
-        // Test Do SKill
-        LevelManager.Instance.battle.skillManager.DoSkill(10001);
-    }
+        Vector3 worldPos = BigWorldManager.Instance.WorldToLocal(GetGameObject().transform.TransformPoint(pos));
+        int2 cell = CommonUtil.VecConvertCell(worldPos);
 
-    private void ClickBattleStart()
-    {
-        GetGameObject("StartButton").gameObject.SetActive(false);
-        //LevelManager.Instance.CreateBattle(GetGameObject("BattleRoot"), 1001);
-        //LevelManager.Instance.StartBattle();
-
-        //_skillBtn.gameObject.SetActive(true);
+        MessageManager.Instance.SendMessage(MessageConst.Battle_UI_TowerPlayDownOrUp, cell.x, cell.y, true, 10001);
     }
 }

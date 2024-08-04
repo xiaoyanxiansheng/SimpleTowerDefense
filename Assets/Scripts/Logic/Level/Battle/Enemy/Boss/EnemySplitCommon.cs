@@ -14,6 +14,7 @@ public class EnemySplitCommon : EnemyCommon
 
     public override void Attacked(int attackMonoId)
     {
+        base.Attacked(attackMonoId);
         int entityId = 20002;
         EntityManager.Instance.CreateEnemy<EnemyCommon>(entityId, (ennemy) =>
         {

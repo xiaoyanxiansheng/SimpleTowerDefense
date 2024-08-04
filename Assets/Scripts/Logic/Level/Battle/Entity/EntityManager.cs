@@ -7,41 +7,54 @@
  */
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class EntityManager
 {
     public static EntityManager Instance;
 
-    private List<LevelEnemyData> _levelEnemyDatas;
+    private List<LevelEnemyData> _levelEnemyDatas = new List<LevelEnemyData>();
 
-    //private List<EntityBase> _entitys = new List<EntityBase>();        // ¹ÖÎï
     private Dictionary<int , EntityBase> _entityMaps = new Dictionary<int , EntityBase>();
-
-    //private List<EnemyBase> _enemys = new List<EnemyBase>();        // ¹ÖÎï
     private Dictionary<int , EnemyBase> _enemyMaps = new Dictionary<int , EnemyBase>();
-
-    private List<TowerBase> _towers = new List<TowerBase>();        // ·ÀÓùËþ
 
     private List<int> _waitDeleteMonoIds = new List<int>();
 
     private float _prebattleContinueTime = 0;
 
-    public EntityManager(List<LevelEnemyData> enemyDatas) 
+    public EntityManager() 
     {
         Instance = this;
-        _levelEnemyDatas = enemyDatas;
+    }
+
+    public void AddEnemys(List<LevelEnemyData> enemyDatas)
+    {
+        _levelEnemyDatas.AddRange(enemyDatas);
     }
 
     public void StartBattle()
     {
+        _prebattleContinueTime = 0;
+    }
 
+    public void ExitBattle()
+    {
+        foreach(int entity in _entityMaps.Keys) 
+        {
+            _entityMaps[entity].ExitBattle();
+            DestoryInstance(entity);
+        }
+        _entityMaps.Clear();
+        _enemyMaps.Clear();
+        _levelEnemyDatas.Clear();
     }
 
     public void Update(float delta , float battleContinueTime)
     {
         // ÍíÒ»Ö¡É¾³ý
-        foreach(var entityMonoId in _waitDeleteMonoIds)
+        foreach (var entityMonoId in _waitDeleteMonoIds)
         {
             DestoryInstance(entityMonoId);
             _entityMaps.Remove(entityMonoId);
@@ -67,6 +80,8 @@ public class EntityManager
                 {
                     EnemyBase e = (EnemyBase)ennemy;
                     e.EnterBattle(enemyData.start, enemyData.end);
+
+                    MessageManager.Instance.SendMessage(MessageConst.Battle_EnemyEnter, e.GetEntityMonoId());
                 });
             }
         }
@@ -76,6 +91,8 @@ public class EntityManager
     public void DestoryEntity(int entityMonoId)
     {
         _waitDeleteMonoIds.Add(entityMonoId);
+        //DestoryInstance(entityMonoId);
+        //_entityMaps.Remove(entityMonoId);
     }
 
     public void DestoryEnemy(int entityMonoId)
@@ -83,6 +100,7 @@ public class EntityManager
         EntityBase enemy = GetEntity(entityMonoId);
         if(enemy != null)
         {
+            _enemyMaps.Remove(entityMonoId);
             DestoryEntity(entityMonoId);
         }
     }
@@ -113,10 +131,21 @@ public class EntityManager
     public void CreateTower(int towerId , Action<EntityBase> createFinishCall)
     {
         string prefabPath = GameApp.Instance.EntityConfig.GetEntityConfigData(towerId).prefabPath;
-        CreateEntity<TowerBase>(prefabPath, (entity) =>
+        CreateEntity<Tower>(prefabPath, (entity) =>
         {
             entity.InitEntity(towerId);
-            entity.SetParent(LevelManager.Instance.battle.BattleRoot);
+            entity.SetParent(BigWorldManager.Instance.LocalBattleLayer);
+            createFinishCall(entity);
+        });
+    }
+
+    public void CreateTowerCusion(int towerCusionId, Action<EntityBase> createFinishCall)
+    {
+        string prefabPath = GameApp.Instance.EntityConfig.GetEntityConfigData(towerCusionId).prefabPath;
+        CreateEntity<TowerCusion>(prefabPath, (entity) =>
+        {
+            entity.InitEntity(towerCusionId);
+            entity.SetParent(BigWorldManager.Instance.LocalBattleLayer);
             createFinishCall(entity);
         });
     }
@@ -128,10 +157,10 @@ public class EntityManager
         {
             EntityBehaviour entityBehaviour = entity.GetGameObject().GetComponent<EntityBehaviour>();
             if (entityBehaviour == null) entityBehaviour = entity.GetGameObject().AddComponent<EntityBehaviour>();
-            entityBehaviour.entityMonoId = entity.GetEntityMonoId();
+            entityBehaviour.entityAttackMonoId = entity.GetEntityMonoId();
 
             entity.InitEntity(entityId);
-            entity.SetParent(LevelManager.Instance.battle.BattleRoot);
+            entity.SetParent(BigWorldManager.Instance.LocalBattleLayer);
             _enemyMaps[entity.GetEntityMonoId()] = (EnemyBase)entity;
             createFinishCall(entity);
         });
@@ -144,10 +173,10 @@ public class EntityManager
         {
             EntityBehaviour entityBehaviour = entity.GetGameObject().GetComponent<EntityBehaviour>();
             if (entityBehaviour == null) entityBehaviour = entity.GetGameObject().AddComponent<EntityBehaviour>();
-            entityBehaviour.entityMonoId = entity.GetEntityMonoId();
+            entityBehaviour.entityAttackMonoId = entity.GetEntityMonoId();
 
             entity.InitEntity(skillId);
-            entity.SetParent(LevelManager.Instance.battle.BattleRoot);
+            entity.SetParent(BigWorldManager.Instance.LocalBattleLayer);
             createFinishCall(entity);
         });
     }

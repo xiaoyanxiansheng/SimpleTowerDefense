@@ -1,4 +1,4 @@
-public class HealthBuff : EntityComponentBase
+public class HealthBuff : BuffBase
 {
     private float _addHealth;
     private float _continueTime;
@@ -9,13 +9,30 @@ public class HealthBuff : EntityComponentBase
 
     private float _levelRate = 1;
 
-    public HealthBuff(EntityBase entity, BuffConfig.Buff buff , int level) : base(entity)
+    private int _curAddHealth = 0;
+
+    public HealthBuff(int attackEntityId , int beAttackEntityId, BuffConfig.Buff buff , int level):base(buff.buffId, attackEntityId, beAttackEntityId, buff.replaceType, BuffType.Health)
     {
         // 增加生命 持续时间 间隔时间
         _addHealth = buff.ps[0];
         _continueTime = buff.ps[1];
         _inverval = buff.ps[2];
         _level = level;
+    }
+
+    public override void End()
+    {
+        
+    }
+
+    public override float GetEffectValue()
+    {
+        return _curAddHealth;
+    }
+
+    public override bool IsEnd()
+    {
+        return _continueTime < 0;
     }
 
     public override void Start()
@@ -27,7 +44,6 @@ public class HealthBuff : EntityComponentBase
     {
         if (_continueTime < 0) 
         {
-            entity.RemoveComponent(this);
             return;
         }
 
@@ -35,16 +51,19 @@ public class HealthBuff : EntityComponentBase
 
         if (_inverval == 0)
         {
-            entity.SetBuffHealth(entity.GetBuffHealth() + _addHealth * _level * _levelRate);
-            entity.RemoveComponent(this);
+            _curAddHealth = (int)(_addHealth * _level * _levelRate);
+
+            MessageManager.Instance.SendMessage(MessageConst.Battle_EntityHurt, beAttackEntityId , _curAddHealth);
             return;
         }
 
         _passTime += delta;
         if (_passTime >= _inverval)
         {
-            entity.SetBuffHealth(entity.GetBuffHealth() + _addHealth * _level * _levelRate);
+            _curAddHealth = (int)(_addHealth * _level * _levelRate);
             _passTime = 0;
+
+            MessageManager.Instance.SendMessage(MessageConst.Battle_EntityHurt, beAttackEntityId, _curAddHealth);
         }
     }
 }

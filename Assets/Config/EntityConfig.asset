@@ -20,9 +20,9 @@ MonoBehaviour:
       ps:
       - 10001
       - 1
-      - 3
-      - 300
-      - 10002
+      - 1
+      - 500
+      - 10001
       - 1
   - desc: Tower_10002
     EntityId: 10002
@@ -54,8 +54,8 @@ MonoBehaviour:
     prefabPath: Prefab/Battle/Entity/Boss/Snake001_Body
     DataConfig:
       ps:
-      - 50
       - 200
+      - 100
   - desc: Enemy_20003
     EntityId: 20003
     prefabPath: 
@@ -96,3 +96,15 @@ MonoBehaviour:
     prefabPath: 
     DataConfig:
       ps: []
+  - desc: "\u5854\u57AB \u6539\u53D8\u6280\u80FD\u5C5E\u6027\u4E3A\u706B"
+    EntityId: 60001
+    prefabPath: Prefab/Battle/Tower/TowerCushion01_Fire
+    DataConfig:
+      ps:
+      - 10001
+  - desc: "\u5854\u57AB \u6539\u53D8\u6280\u80FD\u5C5E\u6027\u4E3A\u51B0"
+    EntityId: 60002
+    prefabPath: Prefab/Battle/Tower/TowerCushion01_Ice
+    DataConfig:
+      ps:
+      - 10002

@@ -43,6 +43,7 @@ public class Timer{
     private int _timerUniqueId = 0;
     // 当前保存的所有倒计时信息
     private Dictionary<int, TimerEvent> _timerEventDic = new Dictionary<int, TimerEvent>();
+    private Dictionary<int, TimerEvent> _waitTimerEventDic = new Dictionary<int, TimerEvent>();
     // 缓存的倒计时信息（优化）
     private List<TimerEvent> _freeTimerEventList = new List<TimerEvent>();
 
@@ -75,6 +76,12 @@ public class Timer{
         return tempTimerEvent;
     }
 
+    public static void Create()
+    {
+        if (Instance != null) return;
+        new Timer();
+    }
+
     public Timer()
     {
         Instance = this;
@@ -82,8 +89,18 @@ public class Timer{
 
     public void FixedUpdate()
     {
+        CheckAdd();
         CheckInvalid();
         CheckValid(Time.deltaTime);
+    }
+
+    void CheckAdd()
+    {
+        foreach (int id in _waitTimerEventDic.Keys)
+        {
+            _timerEventDic[id] = _waitTimerEventDic[id];
+        }
+        _waitTimerEventDic.Clear();
     }
 
     // 检测倒计时是否已经失效
@@ -102,7 +119,7 @@ public class Timer{
     // 检查有效的的倒计时信息
     void CheckValid(float delta)
     {
-        foreach(TimerEvent timerEvent in _timerEventDic.Values)
+        foreach (TimerEvent timerEvent in _timerEventDic.Values)
         {
             if (timerEvent.timerState == TimerState.Run)
             {
@@ -118,7 +135,7 @@ public class Timer{
                     }
                     if (isInvalid == true)
                     {
-                        EnterState(timerEvent.uniqueId,TimerState.Invalid);
+                        EnterState(timerEvent.uniqueId, TimerState.Invalid);
                     }
                 }
             }
@@ -129,7 +146,7 @@ public class Timer{
     private void EnterState(int uniqueId,TimerState state)
     {
         TimerEvent timerEvent = null;
-        if (_timerEventDic.TryGetValue(uniqueId, out timerEvent))
+        if (!_timerEventDic.TryGetValue(uniqueId, out timerEvent))
         {
             return;
         }
@@ -144,7 +161,7 @@ public class Timer{
         timerEvent.finishCall = finishCall;
         timerEvent.uniqueId = ++_timerUniqueId;
         timerEvent.timerState = TimerState.Run;
-        _timerEventDic.Add(_timerUniqueId, timerEvent);
+        _waitTimerEventDic.Add(_timerUniqueId, timerEvent);
         return _timerUniqueId;
     }
 

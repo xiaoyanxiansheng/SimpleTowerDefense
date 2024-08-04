@@ -44,7 +44,7 @@ public class MessageManager
         DispatchMessage(msg);
     }
 
-    public void RegisterMessage(string msgName , MessageDelegate messageCall)
+    public Message RegisterMessage(string msgName , MessageDelegate messageCall)
     {
         Message m = BeginMessage(msgName);
         m.messageCall = messageCall;
@@ -57,6 +57,26 @@ public class MessageManager
         if (!_mesageMap[m.name].Contains(m))
         {
             _mesageMap[m.name].Add(m);
+        }
+        return m;
+    }
+
+    public void RemoveMessage(string msgName, MessageDelegate messageCall)
+    {
+        if (!_mesageMap.ContainsKey(msgName)) return;
+
+        int inIndex = -1;
+        for(int i = 0; i < _mesageMap[msgName].Count; i++)
+        {
+            if (_mesageMap[msgName][i].messageCall == messageCall)
+            {
+                inIndex = i;
+                break;
+            }
+        }
+        if(inIndex != -1)
+        {
+            _mesageMap[msgName].RemoveAt(inIndex);
         }
     }
 
@@ -111,15 +131,26 @@ public static class MessageConst
     public static string UI_Click = "1003";
     public static string Tut_End = "2001";
 
+    public static string Battle_UI_SelectTower = "Battle_UI_SelectTower";
+    public static string Battle_UI_SelectCusion = "Battle_UI_SelectCusion";
+    public static string Battle_UI_TowerPlayDownOrUp = "Battle_UI_TowerPlayDownOrUp";
+    public static string Battle_UI_CusionPlayDownOrUp = "Battle_UI_CusionPlayDownOrUp";
+
+    // 大世界
+    public static string Battle_BigWorld_Create = "Battle_BigWorld_Create";
+
     // 战斗相关
     public static string Battle_BattleStart = "Battle_BattleStart";
     public static string Battle_BattleFail = "Battle_BattleFail";
+    public static string Battle_BattleExit = "Battle_BattleExit";
     public static string Battle_BattleSuccess = "Battle_BattleSuccess";
-    public static string Battle_EnemyEnter = "Battle_EnemyEnter";
-    public static string Battle_EnemyDie = "Battle_EnemyDie";
 
-    public static string Battle_TowerPlayDownOrUp = "Battle_TowerPlayDownOrUp";
+    public static string Battle_EnemyEnter = "Battle_EnemyEnter";   // 敌人进入战斗
+    public static string Battle_EnemyDie = "Battle_EnemyDie";       // 敌人死亡
+    public static string Battle_EnemyExit = "Battle_EnemyExit";     // 敌人到达终点
 
     public static string Battle_Collision = "Battle_Collision";
+
+    public static string Battle_EntityHurt = "Battle_EntityHurt";
 
 }

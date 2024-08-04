@@ -6,9 +6,13 @@
  */
 
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public abstract class EnemyBase : EntityBase
 {
+    protected float defaltHealth;
+    protected float defaultMoveSpeed;
+
     protected float health;
     protected float moveSpeed;
 
@@ -20,8 +24,11 @@ public abstract class EnemyBase : EntityBase
         base.OnInitEntity();
 
         // ÑªÁ¿ ËÙ¶È
-        health = dataConfig.ps[0];
-        moveSpeed = dataConfig.ps[1];
+        defaltHealth = dataConfig.ps[0];
+        defaultMoveSpeed = dataConfig.ps[1];
+
+        health = defaltHealth;
+        moveSpeed = defaultMoveSpeed;
     }
 
     public virtual void EnterBattle(Vector2 startPos, Vector2 endPos)
@@ -31,28 +38,41 @@ public abstract class EnemyBase : EntityBase
         base.EnterBattle();
     }
 
-    public override float GetBuffMoveSpeed()
+    public float GetDefaultHealth()
+    {
+        return defaltHealth;
+    }
+
+    public float GetDefaultMoveSpeed()
+    {
+        return defaultMoveSpeed;
+    }
+    public float GetHealth()
+    {
+        return health;
+    }
+
+    public float GetMoveSpeed()
     {
         return moveSpeed;
     }
 
-    public override void SetBuffMoveSpeed(float speed)
+    public override void AddBuffValue(BuffType buffType, float value)
     {
-        if(speed < 0) { speed = 0; }
-        moveSpeed = speed;
-    }
+        base.AddBuffValue(buffType, value);
 
-    public override float GetBuffHealth()
-    {
-        return health;
-    }
-    public override void SetBuffHealth(float health)
-    {
-        this.health = health;
-
-        if (this.health <= 0)
+        if(buffType == BuffType.Health)
         {
-            MessageManager.Instance.SendMessage(MessageConst.Battle_EnemyDie, this.GetEntityMonoId());
+            health += value;
+            if(health < 0) { health = 0;}
+            if(health == 0)
+            {
+                MessageManager.Instance.SendMessage(MessageConst.Battle_EnemyDie, this.GetEntityMonoId());
+            }
+        }
+        else if(buffType == BuffType.Speed)
+        {
+            moveSpeed = defaultMoveSpeed + value;
         }
     }
 }

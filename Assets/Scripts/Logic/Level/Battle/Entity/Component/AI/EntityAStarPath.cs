@@ -33,14 +33,6 @@ public class EntityAStarPath
     public void ClearWeight()
     {
         _weightList.Clear();
-        for (int i = 0; i < Define.CELL_COUNT_WIDTH; i++)
-        {
-            _weightList[i] = new Dictionary<int, int>();
-            for (int j = 0; j < Define.CELL_COUNT_HEIGHT; j++)
-            {
-                _weightList[i][j] = Define.CELL_MAXWEIGHT;
-            }
-        }
     }
 
     public void GetPathPoints(ref List<int2> pathPoints , List<CellData> cellDatas, int2 start , int2 end)
@@ -50,6 +42,7 @@ public class EntityAStarPath
         {
             int moveWieght = cellData.MoveWeight;
             if (cellData.CellType != CellType.Move) moveWieght = Define.CELL_MAXWEIGHT;
+            if (!_weightList.ContainsKey(cellData.X)) _weightList[cellData.X] = new Dictionary<int, int>();
             _weightList[cellData.X][cellData.Y] = moveWieght;
         }
 
@@ -198,8 +191,8 @@ public class EntityAStarPath
 
     private bool CheckPointValid(int2 point)
     {
-        if (point.x < 0 || point.y < 0) return false;
-        if (point.x >= Define.CELL_COUNT_WIDTH || point.y >= Define.CELL_COUNT_HEIGHT) return false;
+        if (!_weightList.ContainsKey(point.x)) return false;
+        if (!_weightList[point.x].ContainsKey(point.y)) return false;
         return true;
     }
 

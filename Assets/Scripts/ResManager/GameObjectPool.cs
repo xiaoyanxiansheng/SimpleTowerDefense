@@ -87,7 +87,7 @@ public class GameObjectPool {
         // UI
         else if(type == LoadGameObjectType.UI)
         {
-            GameObject root = GameObject.Find("UIRoot");
+            GameObject root = GameObject.Find("UIRoot/UI/Bottom");
             parent = root.transform;
             //son = obj.transform.Find("Core");
             //GameObject.Destroy(obj);

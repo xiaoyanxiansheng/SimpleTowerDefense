@@ -1,4 +1,4 @@
-public class SpeedBuff : EntityComponentBase
+public class SpeedBuff : BuffBase
 {
     private float _addSpeed;
     private float _continueTime;
@@ -8,7 +8,9 @@ public class SpeedBuff : EntityComponentBase
 
     private float _levelRate = 1;
 
-    public SpeedBuff(EntityBase entity, BuffConfig.Buff buff , int level) : base(entity)
+    private float _curAddSpeed;
+
+    public SpeedBuff(int attackEntityId, int beAttackEntityId, BuffConfig.Buff buff , int level) : base(buff.buffId, attackEntityId, beAttackEntityId, buff.replaceType , BuffType.Speed)
     {
         // 速度 持续时间
         _addSpeed = buff.ps[0];
@@ -16,11 +18,25 @@ public class SpeedBuff : EntityComponentBase
         _level = level;
     }
 
+    public override void End()
+    {
+        
+    }
+
+    public override float GetEffectValue()
+    {
+        return _curAddSpeed;
+    }
+
     public override void Start()
     {
         _passTime = 0;
+        _curAddSpeed = _addSpeed * _level * _levelRate;
+    }
 
-        entity.SetBuffMoveSpeed(entity.GetBuffMoveSpeed() + _addSpeed * _level * _levelRate);
+    public override bool IsEnd()
+    {
+        return _passTime >= _continueTime;
     }
 
     public override void Update(float delta)
@@ -29,8 +45,7 @@ public class SpeedBuff : EntityComponentBase
 
         if (_passTime >= _continueTime) 
         {
-            entity.SetBuffMoveSpeed(entity.GetBuffMoveSpeed() - _addSpeed);
-            entity.RemoveComponent(this);
+            _curAddSpeed = 0;
         }
     }
 }

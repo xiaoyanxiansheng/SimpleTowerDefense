@@ -24,10 +24,11 @@ public static class CommonUtil
 
     public static bool OutCombatArea(Vector2 pos)
     {
-        float halfCell = Define.CELL_SIZE * 0.5f;
-        if (pos.x - halfCell > Define.CELL_COUNT_WIDTH * Define.CELL_SIZE) return true;
-        if (pos.y - halfCell > Define.CELL_COUNT_HEIGHT * Define.CELL_SIZE) return true;
-        if (pos.x + halfCell < 0 || pos.y + halfCell < 0) return true;
+        //float halfCell = Define.CELL_SIZE * 0.5f;
+        //if (pos.x - halfCell > Define.CELL_COUNT_WIDTH * Define.CELL_SIZE) return true;
+        //if (pos.y - halfCell > Define.CELL_COUNT_HEIGHT * Define.CELL_SIZE) return true;
+        //if (pos.x + halfCell < 0 || pos.y + halfCell < 0) return true;
+        //return false;
         return false;
     }
 
@@ -59,7 +60,7 @@ public static class CommonUtil
     public static float GetAngle(Vector2 dir1, Vector2 dir2)
     {
         float angle = Vector2.SignedAngle(dir1, dir2); ;
-        return angle;
+        return -angle;
     }
 
     public static Vector2 IntConvertVec(int2 val)
@@ -97,5 +98,25 @@ public static class CommonUtil
         float angleRad = Mathf.Atan2(direction.y, direction.x);
         float angleDeg = (180 / Mathf.PI) * angleRad;
         return angleDeg - 90;   // ÓëYÖáµÄ½Ç¶È
+    }
+
+    public static Vector2 GetLocalPosition(Vector2 worldPosition)
+    {
+        return BigWorldManager.Instance.WorldToLocal(worldPosition);
+    }
+
+    public static int2 GetLocalPoint(Vector2 localPosition)
+    {
+        return new int2(Mathf.RoundToInt(localPosition.x / Define.CELL_SIZE), Mathf.RoundToInt(localPosition.y / Define.CELL_SIZE));
+    }
+
+    public static int2 GetLocalFloorPoint(Vector2 localPosition)
+    {
+        return new int2(Mathf.FloorToInt(localPosition.x / Define.CELL_SIZE), Mathf.FloorToInt(localPosition.y / Define.CELL_SIZE));
+    }
+
+    public static int2 GetLocalCeilPoint(Vector2 localPosition)
+    {
+        return new int2(Mathf.CeilToInt(localPosition.x / Define.CELL_SIZE), Mathf.CeilToInt(localPosition.y / Define.CELL_SIZE));
     }
 }

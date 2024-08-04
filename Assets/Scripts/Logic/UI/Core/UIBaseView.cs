@@ -7,9 +7,11 @@ UI分类
 
 using System;
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using static MessageManager;
 
 public abstract class UIBaseView
 {
@@ -21,13 +23,13 @@ public abstract class UIBaseView
     private GameObject uiBindCore;			// 绑定Prefab中节点控件
     private List<MessageManager.Message> registerMessages = new List<MessageManager.Message>();	// 注册的消息
 
-	// 打开关闭流程
+    // 打开关闭流程
     private bool isShow = false;			// 当前UI是否显示
 
     protected UIBaseView(string name)
     {
         this.name = name;
-        this.openParams.Clear();
+        if (openParams != null) openParams.Clear();
     }
 
     public void SetOpenParams(List<object> openParams)
@@ -77,6 +79,10 @@ public abstract class UIBaseView
 
         uiInitRequestId = 0;
         uiInstanceId = instanceId;
+
+        GameObject ui = GetGameObject();
+        var trams = ui.GetComponent<RectTransform>();
+        trams.sizeDelta = Vector2.zero;
 
         // 加载完成
         OnCreate();
@@ -187,6 +193,7 @@ public abstract class UIBaseView
         ClearParams();
         // 5 卸载完成
         OnDestory();
+        uiInstanceId = 0;
     }
 
     private void BindUICore()
@@ -206,7 +213,7 @@ public abstract class UIBaseView
 
     private void ClearParams()
     {
-        openParams.Clear();
+        if (openParams != null) openParams.Clear();
     }
 
     private void OnShowBefore()
@@ -250,14 +257,21 @@ public abstract class UIBaseView
         return isShow;
     }
 
-    protected void RegisterMessage(MessageManager.Message message)
+    protected void RegisterMessage(string msgName , MessageDelegate messageCall)
     {
-        if(!registerMessages.Contains(message))
+        for(int i = 0; i < registerMessages.Count; i++)
         {
-            registerMessages.Add(message);
+            MessageManager.Message m = registerMessages[i];
+            if(m.name == msgName && m.messageCall == messageCall)
+            {
+                return;
+            }
         }
 
-        MessageManager.Instance.RegisterMessage(message);
+        MessageManager.Message nm = MessageManager.Instance.BeginMessage(msgName);
+        nm.messageCall = messageCall;
+        MessageManager.Instance.RegisterMessage(nm);
+        registerMessages.Add(nm);
     }
 
     private void RemoveRegisterMesssge() 
@@ -272,6 +286,7 @@ public abstract class UIBaseView
     private void SetUILayer()
     {
         // TODO 0 需要动态计算层级
+        GetGameObject().transform.SetSiblingIndex(UIManager.Instance.UIRoot.transform.childCount);
     }
 
     private void DelUILayer()
@@ -384,6 +399,11 @@ public abstract class UIBaseView
         return GetGameObjectById(uiInstanceId).transform.Find(path).gameObject;
     }
 
+    protected int GetInstanceId()
+    {
+        return uiInstanceId;
+    }
+
     #region 子类重写
     // 加载完成
     public abstract void OnCreate();
@@ -397,4 +417,9 @@ public abstract class UIBaseView
     // 卸载完成
     public abstract void OnDestory();
     #endregion
+
+    protected void OnBack()
+    {
+        UIManager.Instance.Close(name,true);
+    }
 }

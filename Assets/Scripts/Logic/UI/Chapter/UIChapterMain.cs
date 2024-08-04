@@ -69,6 +69,6 @@ public class UIChapterMain : UIBaseView
         List<object> ps = new List<object>();
         ps.Add(1);
         ps.Add(index+1);
-        UIManager.Instance.Open(ps,UIViewName.UIBattleCommon);
+        UIManager.Instance.Open(ps, UIViewName.UIBattleCommon, UIViewName.UIBattleInterAction, UIViewName.UIBattleTower);
     }
 }

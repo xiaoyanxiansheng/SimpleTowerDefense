@@ -20,8 +20,8 @@ public class LevelEnemyData
         LevelEnemyData data = new LevelEnemyData();
         data.entityId = behaviour.entityId;
         data.enterTime = behaviour.enterTime;
-        data.start = behaviour.start.transform.localPosition;
-        data.end = behaviour.end.transform.localPosition;
+        data.start = BigWorldManager.Instance.WorldToLocal(behaviour.start.transform.position);
+        data.end = BigWorldManager.Instance.WorldToLocal(behaviour.end.transform.position);
         return data;
     }
 }
